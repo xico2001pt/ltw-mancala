@@ -9,15 +9,37 @@ nav {
 
 #navigation-logo {
     background-color: red;
-    height: 150px;
+}
+
+#navigation-logo img {
+    width: 75px;
+    display: block;
+    margin: auto;
+    padding: 10px;
 }
 
 #navigation-menus {
-    background-color: black;
+    background-color: rgb(138, 243, 128);
     height: 150px;
+    padding: 10px;
+}
+
+#navigation-menus table {
+    width: 100%;
+}
+
+#navigation-menus td {
+    padding: 0px;
+}
+
+#navigation-menus img {
+    height: 25px;
+    margin: 5px;
+    vertical-align: middle;
 }
 
 #navigation-login {
     background-color: yellow;
     height: 150px;
+    padding: 10px;
 }

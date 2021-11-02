@@ -2,5 +2,22 @@ nav {
     width: 300px;
     height: 100vh;
     background-color: aquamarine;
-    float: left;
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+#navigation-logo {
+    background-color: red;
+    height: 150px;
+}
+
+#navigation-menus {
+    background-color: black;
+    height: 150px;
+}
+
+#navigation-login {
+    background-color: yellow;
+    height: 150px;
 }

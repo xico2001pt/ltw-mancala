@@ -1,14 +1,14 @@
 nav {
     width: 300px;
     height: 100vh;
-    background-color: aquamarine;
+    background-color: #454553;
     display: inline-flex;
     flex-direction: column;
     justify-content: space-between;
 }
 
 #navigation-logo {
-    background-color: red;
+    
 }
 
 #navigation-logo img {
@@ -19,9 +19,7 @@ nav {
 }
 
 #navigation-menus {
-    background-color: rgb(138, 243, 128);
-    height: 150px;
-    padding: 10px;
+
 }
 
 #navigation-menus table {
@@ -39,7 +37,38 @@ nav {
 }
 
 #navigation-login {
-    background-color: yellow;
-    height: 150px;
-    padding: 10px;
+    display: block;
+}
+
+.navigation-input {
+    background-color: rgba(0, 0, 0, 0);
+    display: block;
+    width: 100%;
+    height: 25px;
+    border: 0px;
+    padding: 5px;
+    transition: 0.5s;
+}
+
+.navigation-input:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+#navigation-login-buttons {
+    height: 30px;
+    width: 100%;
+    display: flex;
+    align-items: stretch;
+}
+
+#navigation-login-buttons button {
+    background-color: rgba(0, 0, 0, 0);
+    width: 50%;
+    padding: 0px;
+    border: 0px;
+    transition: 0.5s;
+}
+
+#navigation-login-buttons button:hover {
+    background-color: rgba(235, 88, 111, 0.8);
 }

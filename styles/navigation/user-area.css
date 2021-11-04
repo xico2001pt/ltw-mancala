@@ -34,6 +34,10 @@ input {
     transition: 0.05s;
 }
 
+#login-area, #register-area {
+    overflow: hidden;
+}
+
 .navigation-input-field, .navigation-input-button {
     display: block;
     width: 100%;

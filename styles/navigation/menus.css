@@ -1,0 +1,20 @@
+#navigation-menus {
+
+}
+
+#navigation-menus table {
+    width: 100%;
+}
+
+#navigation-menus td {
+    padding: 0px;
+    font-size: larger;
+    height: 40px;
+}
+
+#navigation-menus img {
+    height: 35px;
+    margin: 5px;
+    margin-left: 15px;
+    vertical-align: middle;
+}

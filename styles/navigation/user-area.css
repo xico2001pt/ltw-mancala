@@ -1,0 +1,81 @@
+#navigation-login {
+    display: block;
+}
+
+/* TODO: NOT WORKING */
+input {
+    filter: none !important;  /* Prevent auto fill from changing color */
+}
+
+#navigation-login-buttons {
+    height: 35px;
+    width: 100%;
+    display: flex;
+    background-color: rgb(219, 52, 78);
+}
+
+#navigation-login-buttons button {
+    background-color: rgba(0, 0, 0, 0);
+    color: rgb(216, 233, 240);
+    font-weight: bold;
+    font-size: medium;
+    width: 50%;
+    padding: 0px;
+    border: 0px;
+    transition: 0.5s;
+}
+
+#navigation-login-buttons button:hover {
+    background-color: rgb(185, 44, 65);
+}
+
+#navigation-login-buttons button:active {
+    background-color: rgb(148, 38, 55);
+    transition: 0.05s;
+}
+
+.navigation-input-field, .navigation-input-button {
+    display: block;
+    width: 100%;
+    height: 35px;
+    border: 0px;
+    padding: 5px;
+    padding-left: 10px;
+    transition: 0.4s;
+    color: rgb(255, 255, 255);
+}
+
+.navigation-input-field {
+    background-color: rgba(0, 0, 0, 0);
+    box-sizing: border-box;
+    height: 45px;
+    border-left-style: double;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 15px;
+}
+
+.navigation-input-field:hover, .navigation-input-field:focus {
+    background-color: rgb(59, 59, 71);
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.4);
+    outline: none;
+}
+
+.navigation-input-button {
+    background-color: rgb(29, 142, 210);
+    color: rgb(216, 233, 240);
+    font-weight: bold;
+    font-size: medium;
+}
+
+.navigation-input-field:focus {
+    border-left-width: 8px;
+}
+
+.navigation-input-button:hover {
+    background-color: rgb(24, 116, 173);
+}
+
+.navigation-input-button:active {
+    background-color: rgb(21, 93, 138);
+    transition: 0.1s;
+}

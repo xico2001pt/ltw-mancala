@@ -1,0 +1,20 @@
+nav {
+    width: 350px;
+    height: 100vh;
+    background-color: #454553;
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: -3px 0px 10px rgba(0, 0, 0, 0.6);
+}
+
+#navigation-logo {
+    
+}
+
+#navigation-logo img {
+    width: 75px;
+    display: block;
+    margin: auto;
+    padding: 10px;
+}

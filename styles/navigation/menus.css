@@ -1,9 +1,14 @@
 #navigation-menus {
-
+    height: 150px;
+    width: 100%;
+    background-color: rgb(219, 52, 78);
+    display: flex;
+    vertical-align: middle;
 }
 
-#navigation-menus table {
+#navigation-menus table{
     width: 100%;
+    border-collapse: collapse;
 }
 
 #navigation-menus td {
@@ -17,4 +22,26 @@
     margin: 5px;
     margin-left: 15px;
     vertical-align: middle;
+}
+
+#navigation-menus button {
+    background-color: rgba(0, 0, 0, 0);
+    color: rgb(216, 233, 240);
+    font-weight: bold;
+    font-size: medium;
+    width: 70%;
+    height: 35px;
+    padding: 0px;
+    border: 0px;
+    margin-left: 0px;
+}
+
+#navigation-menus td:hover {
+    transition: 0.4s;
+    background-color: rgb(185, 44, 65);
+}
+
+#navigation-menus td:active {
+    transition: 0.05s;
+    background-color: rgb(148, 38, 55);
 }

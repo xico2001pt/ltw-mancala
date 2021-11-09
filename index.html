@@ -9,6 +9,10 @@
         <link rel="stylesheet" href="styles/navigation/user-area.css">
         <link rel="stylesheet" href="styles/main.css">
         <link rel="stylesheet" href="styles/menu-contents/play-content.css">
+        <link rel="stylesheet" href="styles/menu-contents/instructions-content.css">
+        <link rel="stylesheet" href="styles/menu-contents/leaderboard-content.css">
+
+        <script src="scripts/menu-controller.js"></script> 
         <title>Mancala LTW 20/21</title>  <!-- TODO: CHANGE TITLE -->
     </head>
     <body>
@@ -19,15 +23,15 @@
             
             <div id="navigation-menus">
                 <table>
-                    <tr>
+                    <tr id="play-button" onclick="changeMenu(0)">
                         <td><img src="assets/logo.png" alt="play"></td>
                         <td><button type="button">Play</button></td>
                     </tr>
-                    <tr>
-                        <td><img src="assets/logo.png" alt="rules"></td>
-                        <td><button type="button">Rules</button></td>
+                    <tr id="instructions-button" onclick="changeMenu(1)">
+                        <td><img src="assets/logo.png" alt="instructions"></td>
+                        <td><button type="button">Instructions</button></td>
                     </tr>
-                    <tr>
+                    <tr id="leaderboard-button" onclick="changeMenu(2)">
                         <td><img src="assets/logo.png" alt="leaderboard"></td>
                         <td><button type="button">Leaderboard</button></td>
                     </tr>
@@ -97,11 +101,50 @@
                         </form>
                     </div>       
                 </div>
-                <div id="rules-content">
-
+                <div id="instructions-content">
+                    <h2>Board</h2>
+                    <p>Each player controls the holes on their side and the deposit to their right.</p>
+                    <h2>Playing</h2>
+                    <p>Each turn, the player removes all seeds from a hole, sowing the seeds.</p>
+                    <h2>Sowing</h2>
+                    <p>Sowing consists in placing one seed in each of the following holes in sequence, counter-clockwise.</p>
+                    <p>If the next hole is the player's deposit, place a seed there too.</p>
+                    <p>If the next hole is the adversary's deposit, don't place a seed there.</p>
+                    <p>Keep sowing on the player's side if there are still seeds.</p>
+                    <p>If the player's last seed was placed in the player's deposit, they get to play again.</p>
+                    <p>If the player's last seed was placed in a player's empty hole, transfer the seeds on the adversary's oposite hole and and the player's last seed to the player's deposit.</p>
+                    <h2>End</h2>
+                    <p>The game finishes when one of the players can't make a move because all of its holes are empty.</p>
+                    <p>The other player collects the seeds on its holes and places them on the deposit.</p>
+                    <p>The player with more seeds on their deposit wins the game.</p>
                 </div>
                 <div id="leaderboard-content">
-                    
+                    <table>
+                        <tr>
+                            <th>Username</th>
+                            <th>Wins</th>
+                            <th>Losses</th>
+                            <th>Winrate</th>
+                        </tr>
+                        <tr>
+                            <td>Username1</td>
+                            <td>100</td>
+                            <td>0</td>
+                            <td>100%</td>
+                        </tr>
+                        <tr>
+                            <td>soulfighter</td>
+                            <td>50</td>
+                            <td>0</td>
+                            <td>100%</td>
+                        </tr>
+                        <tr>
+                            <td>xico2001pt</td>
+                            <td>0</td>
+                            <td>150</td>
+                            <td>0%</td>
+                        </tr>
+                    </table>
                 </div>
             </div>
         </main>

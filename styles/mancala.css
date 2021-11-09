@@ -9,3 +9,8 @@ body {
 * {
     font-family: Consolas, monaco, monospace;
 }
+
+::placeholder {
+    color: white;
+    opacity: 0.8;
+}

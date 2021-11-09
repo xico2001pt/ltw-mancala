@@ -1,6 +1,5 @@
 #navigation-menus {
     width: 100%;
-    background-color: rgb(219, 52, 78);
     display: flex;
     vertical-align: middle;
 }
@@ -34,12 +33,30 @@
     margin-left: 0px;
 }
 
-#navigation-menus tr:hover {
+.selected-button {
+    background-color: rgb(29, 142, 210);
+}
+
+.selected-button:hover {
+    transition: 0.4s;
+    background-color: rgb(24, 116, 173);
+}
+
+.selected-button:active {
+    transition: 0.05s;
+    background-color: rgb(21, 93, 138);
+}
+
+.deselected-button {
+    background-color: rgb(219, 52, 78);
+}
+
+.deselected-button:hover {
     transition: 0.4s;
     background-color: rgb(185, 44, 65);
 }
 
-#navigation-menus tr:active {
+.deselected-button:active {
     transition: 0.05s;
     background-color: rgb(148, 38, 55);
 }

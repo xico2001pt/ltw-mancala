@@ -11,17 +11,16 @@ input {
     height: 35px;
     width: 100%;
     display: flex;
-    background-color: rgb(219, 52, 78);
 }
 
 #navigation-login-buttons button {
-    background-color: rgba(0, 0, 0, 0);
     color: rgb(216, 233, 240);
     font-weight: bold;
     font-size: medium;
     width: 50%;
     padding: 0px;
     border: 0px;
+    background-color: rgb(219, 52, 78);
 }
 
 #navigation-login-buttons button:hover {
@@ -32,10 +31,6 @@ input {
 #navigation-login-buttons button:active {
     transition: 0.05s;
     background-color: rgb(148, 38, 55);
-}
-
-#login-area, #register-area {
-    overflow: hidden;
 }
 
 .navigation-input-field, .navigation-input-button {
@@ -53,7 +48,6 @@ input {
     box-sizing: border-box;
     height: 45px;
     border-left-style: double;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size: 15px;
 }
 
@@ -67,15 +61,15 @@ input {
     transition: 0.4s;
 }
 
+.navigation-input-field:focus {
+    border-left-width: 8px;
+}
+
 .navigation-input-button {
     background-color: rgb(29, 142, 210);
     color: rgb(216, 233, 240);
     font-weight: bold;
     font-size: medium;
-}
-
-.navigation-input-field:focus {
-    border-left-width: 8px;
 }
 
 .navigation-input-button:hover {
@@ -86,4 +80,8 @@ input {
 .navigation-input-button:active {
     transition: 0.1s;
     background-color: rgb(21, 93, 138);
+}
+
+#navigation-logout {
+    text-align: center;
 }

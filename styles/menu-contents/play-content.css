@@ -25,18 +25,7 @@
     width: 50%;
     height: 40px;
     padding: 0px;
-    background-color: rgb(219, 52, 78);
     border: 0px;
-}
-
-.gamemode-button:hover {
-    transition: 0.5s;
-    background-color: rgb(185, 44, 65);
-}
-
-.gamemode-button:active {
-    transition: 0.05s;
-    background-color: rgb(148, 38, 55);
 }
 
 #play-content table {
@@ -61,15 +50,4 @@
     height: 40px;
     border: 0px;
     border-radius: 5px;
-    background-color: rgb(29, 142, 210);
-}
-
-.start-game-button:hover {
-    transition: 0.5;
-    background-color: rgb(24, 116, 173);
-}
-
-.start-game-button:active {
-   transition: 0.05;
-   background-color: rgb(21, 93, 138);
 }

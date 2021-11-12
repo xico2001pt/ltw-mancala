@@ -12,7 +12,8 @@
         <link rel="stylesheet" href="styles/menu-contents/instructions-content.css">
         <link rel="stylesheet" href="styles/menu-contents/leaderboard-content.css">
 
-        <script src="scripts/menu-controller.js"></script> 
+        <script src="scripts/menu-controller.js"></script>
+        <script src="scripts/authentication-controller.js"></script> 
         <title>Mancala LTW 20/21</title>  <!-- TODO: CHANGE TITLE -->
     </head>
     <body>
@@ -38,36 +39,29 @@
                 </table>
             </div>
 
-            <div id="navigation-login">
-                <div id="navigation-login-buttons">
-                    <button type="button">Register</button>
-                    <button type="button">Login</button>
-                </div>
-                <div id="login-area">
+            <div id="navigation-authentication">
+                <hr>
+                <div id="authentication-area">
                     <input class="navigation-input-field" type="text" placeholder="Nickname" maxlength="25" required>
                     <input class="navigation-input-field" type="password" placeholder="Password" maxlength="25" required>
-                    <button class="navigation-input-button" type="submit">Login</button>
                 </div>
-                <div id="register-area">
-                    <input class="navigation-input-field" type="text" placeholder="Email" maxlength="32" name="email" required>
-                    <input class="navigation-input-field" type="text" placeholder="Nickname" maxlength="25" required>
-                    <input class="navigation-input-field" type="password" placeholder="Password" maxlength="25" required>
-                    <input class="navigation-input-field" type="password" placeholder="Repeat Password" maxlength="25" required>
-                    <button class="navigation-input-button" type="submit">Register</button>
+                <div id="navigation-authentication-buttons">
+                    <button type="button" class="deselected-button" onclick="register()">Register</button>
+                    <button type="button" class="selected-button" onclick="login()">Login</button>
                 </div>
             </div>
-            <!--<div id="navigation-logout">
+            <div id="navigation-logout">
                 <p>Welcome, $Username$</p>
-                <button type="button" class="navigation-input-button">Logout</button>
-            </div>-->
+                <button type="button" class="navigation-input-button deselected-button" onclick="logout()">Logout</button>
+            </div>
         </nav>
 
         <main>
             <div id="menu-content">
                 <div id="play-content">
                     <div id="gamemode-buttons">
-                        <button type="button" id="singleplayer-button" class="gamemode-button">Singleplayer</button>
-                        <button type="button" id="multiplayer-button" class="gamemode-button">Multiplayer</button>
+                        <button type="button" id="singleplayer-button" class="gamemode-button selected-button">Singleplayer</button>
+                        <button type="button" id="multiplayer-button" class="gamemode-button deselected-button">Multiplayer</button>
                     </div>
                     <div id="singleplayer-options">
                         <form>
@@ -97,7 +91,7 @@
                                     </td>
                                 </tr>
                             </table>
-                            <button type="submit" class="start-game-button">Start Game</button>
+                            <button type="submit" class="start-game-button selected-button">Start Game</button>
                         </form>
                     </div>       
                 </div>

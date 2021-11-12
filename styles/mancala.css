@@ -14,3 +14,31 @@ body {
     color: white;
     opacity: 0.8;
 }
+
+.selected-button {
+    background-color: rgb(29, 142, 210);
+}
+
+.selected-button:hover {
+    transition: 0.4s;
+    background-color: rgb(24, 116, 173);
+}
+
+.selected-button:active {
+    transition: 0.05s;
+    background-color: rgb(21, 93, 138);
+}
+
+.deselected-button {
+    background-color: rgb(219, 52, 78);
+}
+
+.deselected-button:hover {
+    transition: 0.4s;
+    background-color: rgb(185, 44, 65);
+}
+
+.deselected-button:active {
+    transition: 0.05s;
+    background-color: rgb(148, 38, 55);
+}

@@ -1,4 +1,3 @@
-
 var menusButtons = [];
 var menusContents = []
 var currentMenu;
@@ -17,16 +16,16 @@ function initializeMenu() {
 
     for (let i = 1; i < menusButtons.length; ++i) {
         deselectButton(menusButtons[i]);
-        changeVisibility(menusContents[i], false);
+        changeVisibility(menusContents[i], "none");
     }
 }
 
 function changeMenu(id) {
     deselectButton(menusButtons[currentMenu]);
-    changeVisibility(menusContents[currentMenu], false);
+    changeVisibility(menusContents[currentMenu], "none");
     currentMenu = id;
     selectButton(menusButtons[currentMenu]);
-    changeVisibility(menusContents[currentMenu], true);
+    changeVisibility(menusContents[currentMenu], "block");
 }
 
 function deselectButton(button) {
@@ -39,6 +38,6 @@ function selectButton(button) {
     button.classList.add("selected-button");
 }
 
-function changeVisibility(elem, visible) {
-    elem.style.display = (visible ? "block" : "none");
+function changeVisibility(elem, visibility) {
+    elem.style.display = visibility;
 }

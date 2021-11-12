@@ -1,4 +1,4 @@
-#navigation-login {
+#navigation-authentication {
     display: block;
 }
 
@@ -7,30 +7,9 @@ input {
     filter: none !important;  /* Prevent auto fill from changing color */
 }
 
-#navigation-login-buttons {
-    height: 35px;
-    width: 100%;
-    display: flex;
-}
-
-#navigation-login-buttons button {
-    color: rgb(216, 233, 240);
-    font-weight: bold;
-    font-size: medium;
-    width: 50%;
-    padding: 0px;
-    border: 0px;
-    background-color: rgb(219, 52, 78);
-}
-
-#navigation-login-buttons button:hover {
-    transition: 0.5s;
-    background-color: rgb(185, 44, 65);
-}
-
-#navigation-login-buttons button:active {
-    transition: 0.05s;
-    background-color: rgb(148, 38, 55);
+#navigation-authentication hr {
+    margin: 2px;
+    color: rgb(255, 255, 255);
 }
 
 .navigation-input-field, .navigation-input-button {
@@ -65,23 +44,27 @@ input {
     border-left-width: 8px;
 }
 
-.navigation-input-button {
-    background-color: rgb(29, 142, 210);
+#navigation-authentication-buttons {
+    height: 35px;
+    width: 100%;
+    display: flex;
+}
+
+#navigation-authentication-buttons button {
     color: rgb(216, 233, 240);
     font-weight: bold;
     font-size: medium;
-}
-
-.navigation-input-button:hover {
-    transition: 0.4s;
-    background-color: rgb(24, 116, 173);
-}
-
-.navigation-input-button:active {
-    transition: 0.1s;
-    background-color: rgb(21, 93, 138);
+    width: 50%;
+    padding: 0px;
+    border: 0px;
 }
 
 #navigation-logout {
     text-align: center;
+}
+
+#navigation-logout button {
+    text-align: center;
+    font-weight: bold;
+    font-size: medium;
 }

@@ -1,6 +1,10 @@
 #instructions-content {
     font-size: 17px;
-    overflow: hidden;
+    height: 100%;
+    overflow-y: scroll;
+    margin: -20px;
+    padding: 20px;
+    scrollbar-width: thin;
 }
 
 #instructions-content h2 {

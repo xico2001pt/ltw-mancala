@@ -51,3 +51,34 @@
     border: 0px;
     border-radius: 5px;
 }
+
+.slider {
+    -webkit-appearance: none;  /* Override default CSS styles */
+    appearance: none;
+    background: rgb(29, 142, 210);
+    border-radius: 10px;
+}
+
+.slider::-webkit-slider-thumb { /* Penso que isto nao funciona em Firefox */
+    -webkit-appearance: none; /* Override default look */
+    background: rgb(219, 52, 78);
+    width: 15px;
+    height: 15px;
+    border-radius: 10px;
+}
+
+.slider::-webkit-slider-thumb:hover {
+    transition: 0.4s;
+    background: rgb(148, 38, 55);
+}
+
+#singleplayer-options select {
+    background-color: rgb(29, 142, 210);
+    color: rgb(216, 233, 240);
+    text-align: center;
+}
+
+#singleplayer-options select:hover {
+    transition: 0.05s;
+    background-color: rgb(21, 93, 138);
+}

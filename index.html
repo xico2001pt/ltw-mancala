@@ -12,8 +12,7 @@
         <link rel="stylesheet" href="styles/menu-contents/instructions-content.css">
         <link rel="stylesheet" href="styles/menu-contents/leaderboard-content.css">
 
-        <script src="scripts/menu-controller.js"></script>
-        <script src="scripts/authentication-controller.js"></script> 
+        <script type="module" src="scripts/mancala.js"></script>
         <title>Mancala LTW 20/21</title>  <!-- TODO: CHANGE TITLE -->
     </head>
     <body>
@@ -24,15 +23,15 @@
             
             <div id="navigation-menus">
                 <table>
-                    <tr id="play-button" onclick="changeMenu(0)">
+                    <tr id="play-button">
                         <td><img src="assets/logo.png" alt="play"></td>
                         <td><button type="button">Play</button></td>
                     </tr>
-                    <tr id="instructions-button" onclick="changeMenu(1)">
+                    <tr id="instructions-button">
                         <td><img src="assets/logo.png" alt="instructions"></td>
                         <td><button type="button">Instructions</button></td>
                     </tr>
-                    <tr id="leaderboard-button" onclick="changeMenu(2)">
+                    <tr id="leaderboard-button">
                         <td><img src="assets/logo.png" alt="leaderboard"></td>
                         <td><button type="button">Leaderboard</button></td>
                     </tr>
@@ -46,13 +45,13 @@
                     <input class="navigation-input-field" type="password" placeholder="Password" maxlength="25" required>
                 </div>
                 <div id="navigation-authentication-buttons">
-                    <button type="button" class="deselected-button" onclick="register()">Register</button>
-                    <button type="button" class="selected-button" onclick="login()">Login</button>
+                    <button type="button" id="register-button" class="deselected-button">Register</button>
+                    <button type="button" id="login-button" class="selected-button">Login</button>
                 </div>
             </div>
             <div id="navigation-logout">
                 <p>Welcome, $Username$</p>
-                <button type="button" class="navigation-input-button deselected-button" onclick="logout()">Logout</button>
+                <button type="button" id="logout-button" class="navigation-input-button deselected-button">Logout</button>
             </div>
         </nav>
 

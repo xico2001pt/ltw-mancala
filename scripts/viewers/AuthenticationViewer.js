@@ -4,6 +4,8 @@ export default class AuthenticationViewer {
     #modesElements;
 
     constructor() {
+        this.#modesElements = [];
+        
         this.#initializeElements();
     }
 
@@ -15,7 +17,6 @@ export default class AuthenticationViewer {
     #initializeElements() {
         const MODES = ["navigation-authentication", "navigation-logout"];
 
-        this.#modesElements = [];
         for (let i = 0; i < MODES.length; ++i) {
             this.#modesElements[i] = document.getElementById(MODES[i]);
         }

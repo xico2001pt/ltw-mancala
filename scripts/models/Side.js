@@ -1,4 +1,4 @@
-import Hole from "./models/Hole.js";
+import Hole from "./Hole.js";
 
 export default class Side {
     #sideHoles;

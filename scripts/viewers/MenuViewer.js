@@ -5,6 +5,9 @@ export default class MenuViewer {
     #menuContents;
 
     constructor(startMenu) {
+        this.#menuButtons = [];
+        this.#menuContents = [];
+        
         this.#initializeElements(startMenu);
     }
 
@@ -19,9 +22,6 @@ export default class MenuViewer {
 
     #initializeElements(startMenu) {
         const MENUS = ["play", "instructions", "leaderboard"];
-
-        this.#menuButtons = [];
-        this.#menuContents = [];
 
         for (let i = 0; i < MENUS.length; ++i) {
             this.#menuButtons[i] = document.getElementById(MENUS[i] + "-button");

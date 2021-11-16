@@ -1,18 +1,23 @@
 import {changeVisibility} from "../utils.js"
+import BoardConfiguration from "../models/BoardConfiguration.js"
 
 export default class GameBuilder {
+    #gameController;
     //#menuController;
     //#authenticationController;
     #navigation;
     #menuContent;
     #gameContent;
 
-    constructor(menuController, authenticationController) {
+    constructor(gameController) {
+        this.#gameController = gameController;
         this.#initialize();
         this.#updateUI(false);
     }
 
     startGame() {
+        let config = new BoardConfiguration(2, 2, 0);
+        this.#gameController.startGame(config);
         this.#updateUI(true);
     }
 

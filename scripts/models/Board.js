@@ -1,13 +1,6 @@
-import Side from "./models/Side.js";
-export default { Board, BoardConfiguration }
+import Side from "./Side.js";
 
-function BoardConfiguration(holesPerSide, seedsPerHole, firstPlayer) {
-    this.holesPerSide = holesPerSide;
-    this.seedsPerHole = seedsPerHole;
-    this.firstPlayer =  firstPlayer;
-}
-
-class Board {
+export default class Board {
     #side1;
     #side2;
 

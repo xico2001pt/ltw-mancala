@@ -21,12 +21,11 @@
     vertical-align: middle;
 }
 
-#navigation-menus button {
+#navigation-menus td {
     background-color: rgba(0, 0, 0, 0);
     color: rgb(216, 233, 240);
     font-weight: bold;
     font-size: medium;
-    width: 70%;
     height: 35px;
     padding: 0px;
     border: 0px;

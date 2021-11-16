@@ -42,7 +42,7 @@
     width: 50%;
 }
 
-.start-game-button {
+#start-game-button {
     color: rgb(216, 233, 240);
     font-weight: bold;
     font-size: medium;

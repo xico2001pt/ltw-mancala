@@ -1,8 +1,13 @@
 #game-header {
     width: 100%;
-    height: 50px;
+    height: 15vh;
+}
+
+#exit-game-button {
+    float: left;
 }
 
 #game-header p {
     text-align: center;
+    margin: 0px;
 }

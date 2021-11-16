@@ -1,5 +1,6 @@
 export function changeVisibility(elem, visible) {
-    elem.style.visibility = (visible ? "visible" : "collapse");
+    if (!visible) elem.classList.add("hidden");
+    else elem.classList.remove("hidden");
 }
 
 export function deselectButton(button) {

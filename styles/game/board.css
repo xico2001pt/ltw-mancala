@@ -9,25 +9,28 @@
 .storage {
     width: 150px;
     background-color: yellow;
+    height: 100%;
 }
 
 #holes {
-    width: 70%;
     margin-left: 15px;
     margin-right: 15px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .side {
     height: 50%;
-    width: 100%;
     background-color: yellow;
     display: flex;
 }
 
 .hole {
-    width: 150px;
-    height: 150px;
+    height: 80%;
     margin: auto;
+    margin-left: 10px;
+    margin-right: 10px;
     background-color: aqua;
     border-radius: 50%;
 }

@@ -42,3 +42,7 @@ body {
     transition: 0.05s;
     background-color: rgb(148, 38, 55);
 }
+
+.hidden {
+    display: none !important;
+}

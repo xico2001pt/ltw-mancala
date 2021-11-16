@@ -8,18 +8,25 @@ export default class GameBuilder {
     #gameContent;
 
     constructor(menuController, authenticationController) {
-        this.#initializeData();
-        //this.#updateUI(false);
+        this.#initialize();
+        this.#updateUI(false);
     }
 
     startGame() {
-        
+        this.#updateUI(true);
     }
 
-    #initializeData() {
+    exitGame() {
+        this.#updateUI(false);
+    }
+
+    #initialize() {
         this.#navigation = document.getElementsByTagName("nav")[0];
         this.#menuContent = document.getElementById("menu-content");
         this.#gameContent = document.getElementById("game-content");
+
+        document.getElementById("start-game-button").addEventListener("click", () => this.startGame());
+        document.getElementById("exit-game-button").addEventListener("click", () => this.exitGame());
     }
     
     #updateUI(playing) {

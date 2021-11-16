@@ -1,12 +1,11 @@
-import { changeVisibility } from "../utils.js";
+import AuthenticationViewer from "../viewers/AuthenticationViewer.js";
 
 export default class AuthenticationController {
-    #modesContent;
+    #viewer;
     #loggedIn;
 
     constructor() {
-        this.#modesContent = [];
-
+        this.#viewer = new AuthenticationViewer();
         this.#initializeAuthentication();
     }
 
@@ -24,30 +23,21 @@ export default class AuthenticationController {
     login() {
         // if valid
         this.#loggedIn = true;
-        this.#updateUserArea();
+        this.#viewer.displayUserArea(this.#loggedIn);
     }
     
     logout() {
         this.#loggedIn = false;
 
-        this.#updateUserArea();
+        this.#viewer.displayUserArea(this.#loggedIn);
     }
 
     #initializeAuthentication() {
-        const MODES = ["navigation-authentication", "navigation-logout"];
-        for (let i = 0; i < MODES.length; ++i) {
-            this.#modesContent[i] = document.getElementById(MODES[i]);
-        }
+        this.logout();
 
         document.getElementById("register-button").addEventListener("click", () => this.register());
         document.getElementById("login-button").addEventListener("click", () => this.login());
         document.getElementById("logout-button").addEventListener("click", () => this.logout());
-    
-        this.logout();
-    }
 
-    #updateUserArea() {
-        changeVisibility(this.#modesContent[0], !this.#loggedIn);
-        changeVisibility(this.#modesContent[1], this.#loggedIn);
     }
 }

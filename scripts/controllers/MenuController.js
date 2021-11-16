@@ -1,41 +1,29 @@
-import { changeVisibility, selectButton, deselectButton } from "../utils.js";
+import MenuViewer from "../viewers/MenuViewer.js";
 
 export default class MenuController {
-    #menusButtons;
-    #menusContents;
+    #viewer;
     #currentMenu;
 
-    constructor() {
-        this.#menusButtons = [];
-        this.#menusContents = [];
-        this.#currentMenu = 0;
+    constructor(startMenuIndex) {
+        this.#viewer = new MenuViewer(startMenuIndex);
+        this.#currentMenu = startMenuIndex;
 
         this.#initializeMenu();
     }
 
     #initializeMenu() {
-        const MENUS = ["play", "instructions", "leaderboard"];
-    
-        for (let i = 0; i < MENUS.length; ++i) {
-            this.#menusButtons[i] = document.getElementById(MENUS[i] + "-button");
-            this.#menusButtons[i].addEventListener("click", () => this.#changeMenu(i));
-            this.#menusContents[i] = document.getElementById(MENUS[i] + "-content");
-        }
-        selectButton(this.#menusButtons[this.#currentMenu])
-    
-        for (let i = 1; i < this.#menusButtons.length; ++i) {
-            deselectButton(this.#menusButtons[i]);
-            changeVisibility(this.#menusContents[i], false);
+        let buttons = this.#viewer.getMenuButtons();
+        for (let i = 0; i < buttons.length; ++i) {
+            buttons[i].addEventListener("click", () => this.#changeMenu(i));
         }
     }
 
     #changeMenu(id) {
-        if (id == this.#currentMenu || id < 0 || id >= this.#menusContents.length) return;
+        if (id == this.#currentMenu || id < 0 || id >= this.#viewer.getMenuButtons().length) return;
 
-        deselectButton(this.#menusButtons[this.#currentMenu]);
-        changeVisibility(this.#menusContents[this.#currentMenu], false);
+        this.#viewer.changeMenu(this.#currentMenu, false);
+        this.#viewer.changeMenu(id, true);
+
         this.#currentMenu = id;
-        selectButton(this.#menusButtons[this.#currentMenu]);
-        changeVisibility(this.#menusContents[this.#currentMenu], true);
     }
 }

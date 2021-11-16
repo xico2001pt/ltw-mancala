@@ -1,0 +1,33 @@
+#game-board {
+    height: 60%;
+    background-color: red;
+    padding: 15px;
+    margin: auto;
+    display: flex;
+}
+
+.storage {
+    width: 150px;
+    background-color: yellow;
+}
+
+#holes {
+    width: 70%;
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+.side {
+    height: 50%;
+    width: 100%;
+    background-color: yellow;
+    display: flex;
+}
+
+.hole {
+    width: 150px;
+    height: 150px;
+    margin: auto;
+    background-color: aqua;
+    border-radius: 50%;
+}

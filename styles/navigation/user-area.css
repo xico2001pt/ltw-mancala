@@ -7,11 +7,6 @@ input {
     filter: none !important;  /* Prevent auto fill from changing color */
 }
 
-#navigation-authentication hr {
-    margin: 2px;
-    color: rgb(255, 255, 255);
-}
-
 .navigation-input-field, .navigation-input-button {
     display: block;
     width: 100%;

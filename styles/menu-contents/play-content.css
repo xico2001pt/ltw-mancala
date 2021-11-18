@@ -19,7 +19,6 @@
 }
 
 .gamemode-button {
-    color: rgb(216, 233, 240);
     font-weight: bold;
     font-size: medium;
     width: 50%;
@@ -43,7 +42,6 @@
 }
 
 #start-game-button {
-    color: rgb(216, 233, 240);
     font-weight: bold;
     font-size: medium;
     width: 100%;
@@ -55,7 +53,7 @@
 .slider {
     -webkit-appearance: none;  /* Override default CSS styles */
     appearance: none;
-    background: rgb(29, 142, 210);
+    background: rgb(199, 148, 24);
     border-radius: 10px;
 }
 
@@ -73,12 +71,13 @@
 }
 
 #singleplayer-options select {
-    background-color: rgb(29, 142, 210);
-    color: rgb(216, 233, 240);
+    background-color: rgb(199, 148, 24);
     text-align: center;
+    font-size: medium;
+    font-weight: bold;
 }
 
 #singleplayer-options select:hover {
     transition: 0.05s;
-    background-color: rgb(21, 93, 138);
+    background-color: rgb(163, 123, 21);
 }

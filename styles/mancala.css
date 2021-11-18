@@ -3,11 +3,11 @@ body {
     width: 100%;
     height: 100%;
     display: inline-flex;
-    color: rgb(216, 233, 240);
 }
 
 * {
     font-family: Consolas, monaco, monospace;
+    color: rgb(238, 238, 238);
 }
 
 ::placeholder {
@@ -16,31 +16,31 @@ body {
 }
 
 .selected-button {
-    background-color: rgb(29, 142, 210);
+    background-color: rgb(199, 148, 24);
 }
 
 .selected-button:hover {
     transition: 0.4s;
-    background-color: rgb(24, 116, 173);
+    background-color: rgb(163, 123, 21);
 }
 
 .selected-button:active {
     transition: 0.05s;
-    background-color: rgb(21, 93, 138);
+    background-color: rgb(116, 87, 15);
 }
 
 .deselected-button {
-    background-color: rgb(219, 52, 78);
+    background-color: rgb(34, 40, 49);
 }
 
 .deselected-button:hover {
     transition: 0.4s;
-    background-color: rgb(185, 44, 65);
+    background-color: rgb(26, 31, 37);
 }
 
 .deselected-button:active {
     transition: 0.05s;
-    background-color: rgb(148, 38, 55);
+    background-color: rgb(20, 24, 29);
 }
 
 .hidden {

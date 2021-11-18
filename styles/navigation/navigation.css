@@ -2,7 +2,7 @@ nav {
     z-index: 1;
     width: 350px;
     height: 100vh;
-    background-color: #454553;
+    background-color: rgb(57, 62, 70);
     display: inline-flex;
     flex-direction: column;
     justify-content: space-between;

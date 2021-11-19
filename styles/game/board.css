@@ -33,3 +33,13 @@
 .storage {
     height: 95%;
 }
+
+.seed {
+    background-color: rgb(199, 148, 24);
+    background-image: linear-gradient(rgb(199, 148, 24), rgb(236, 203, 119), rgb(199, 148, 24));
+    height: 20px;
+    width: 40px;
+    margin: 5px;
+    border-radius: 50%;
+    align-self: center;
+}

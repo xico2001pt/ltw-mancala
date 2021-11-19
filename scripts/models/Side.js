@@ -15,4 +15,8 @@ export default class Side {
     getHole(id) {
         return this.#sideHoles[id];
     }
+
+    getNumHoles() {
+        return this.#sideHoles.length;
+    }
 } 

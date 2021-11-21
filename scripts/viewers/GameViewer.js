@@ -13,6 +13,7 @@ export default class GameViewer {
     }
 
     initializeBoard(board) {
+        this.clearBoard(board);
         for (let i = 0; i < this.#sides.length; ++i) {
             for (let j = 0; j < board.getSide(i).getNumHoles(); ++j) {
                 var div = document.createElement("div");
@@ -21,6 +22,14 @@ export default class GameViewer {
                 for (let k = 0; k < board.getSide(i).getHole(j).getNumOfSeeds(); ++k) {
                     this.#generateSeed(div);
                 }
+            }
+        }
+    }
+
+    clearBoard(board) {
+        for (let i = 0; i < this.#sides.length; ++i) {
+            while (this.#sides[i].firstChild) {
+                this.#sides[i].removeChild(this.#sides[i].firstChild)
             }
         }
     }
@@ -44,7 +53,6 @@ export default class GameViewer {
 
     #initializeElements() {
         const STORAGES = ['left', 'right'];
-
         for (let i = 0; i < STORAGES.length; ++i) {
             this.#storages[i] = document.getElementById(STORAGES[i] + "-storage");
         }

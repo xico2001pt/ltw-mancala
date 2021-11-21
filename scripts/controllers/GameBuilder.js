@@ -16,7 +16,13 @@ export default class GameBuilder {
     }
 
     startGame() {
-        let config = new BoardConfiguration(2, 2, 0);
+        var holesPerSide = document.getElementById("holesPerSide").value;
+        console.log(holesPerSide);
+        var seedsPerHole = document.getElementById("seedsPerHole").value;
+        console.log(seedsPerHole);
+        var playFirst = document.getElementById("playFirst").checked;
+        console.log(playFirst);
+        let config = new BoardConfiguration(holesPerSide, seedsPerHole, playFirst);
         this.#gameController.startGame(config);
         this.#updateUI(true);
     }

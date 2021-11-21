@@ -14,14 +14,28 @@ export default class GameViewer {
 
     initializeBoard(board) {
         for (let i = 0; i < this.#sides.length; ++i) {
-            
+            for (let j = 0; j < board.getSide(i).getNumHoles; ++j) {
+                var div = document.createElement("div");
+                div.classList.add("hole");
+                side.appendChild(div);
+                for (let k = 0; k < board.getSide(i).getHole(j).getNumOfSeeds(); ++k) {
+                    this.#generateSeed(div);
+                }
+            }
         }
-        
-        
-        // for each side
-            // for each hole
-                // place hole (img) in html
-                // place seeds in that hole
+    }
+
+    #placeSeed(hole, x, y, rot) {
+        var div = document.createElement("div");
+        div.classList.add("seed");
+        hole.appendChild(div);
+    }
+
+    #generateSeed(hole) {
+        // generate x
+        // generate y
+        // generate rot
+        this.#placeSeed(hole, x, y, rot);
     }
 
     displayCurrentPlayer(playerName) {

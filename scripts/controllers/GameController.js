@@ -1,6 +1,5 @@
 import GameViewer from "../viewers/GameViewer.js"
 import Board from "../models/Board.js"
-import BoardConfiguration from "../models/BoardConfiguration.js";
 
 export default class GameController {
     #viewer;
@@ -13,6 +12,6 @@ export default class GameController {
 
     startGame(config) {
         this.#board = new Board(config.holesPerSide, config.seedsPerHole);
-        this.#viewer.initializeBoard(this.#board);
+        this.#viewer.initializeBoard(config);
     }
 }

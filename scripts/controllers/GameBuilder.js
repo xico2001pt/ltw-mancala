@@ -9,6 +9,8 @@ export default class GameBuilder {
     #menuContent;
     #gameContent;
 
+    #form;
+
     constructor(gameController) {
         this.#gameController = gameController;
         this.#initialize();
@@ -16,13 +18,11 @@ export default class GameBuilder {
     }
 
     startGame() {
-        var holesPerSide = document.getElementById("holesPerSide").value;
-        console.log(holesPerSide);
-        var seedsPerHole = document.getElementById("seedsPerHole").value;
-        console.log(seedsPerHole);
-        var playFirst = document.getElementById("playFirst").checked;
-        console.log(playFirst);
+        let holesPerSide = this.#form.holesPerSide.value;
+        let seedsPerHole = this.#form.seedsPerHole.value;
+        let playFirst = this.#form.playFirst.checked;
         let config = new BoardConfiguration(holesPerSide, seedsPerHole, playFirst);
+        
         this.#gameController.startGame(config);
         this.#updateUI(true);
     }
@@ -35,6 +35,8 @@ export default class GameBuilder {
         this.#navigation = document.getElementsByTagName("nav")[0];
         this.#menuContent = document.getElementById("menu-content");
         this.#gameContent = document.getElementById("game-content");
+
+        this.#form = document.getElementById("game-config");
 
         document.getElementById("start-game-button").addEventListener("click", () => this.startGame());
         document.getElementById("exit-game-button").addEventListener("click", () => this.exitGame());

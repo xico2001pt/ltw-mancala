@@ -1,4 +1,5 @@
 import Board from "../models/Board.js"
+import { instantiateDiv } from "../utils.js";
 
 export default class GameViewer {
     #currentPlayerElement;
@@ -12,30 +13,27 @@ export default class GameViewer {
         this.#initializeElements();
     }
 
-    initializeBoard(board) {
-        this.clearBoard(board);
-        for (let i = 0; i < this.#sides.length; ++i) {
-            for (let j = 0; j < board.getSide(i).getNumHoles(); ++j) {
-                var div = document.createElement("div");
-                div.classList.add("hole");
-                this.#sides[i].appendChild(div);
-                for (let k = 0; k < board.getSide(i).getHole(j).getNumOfSeeds(); ++k) {
-                    this.#generateSeed(div);
-                }
+    initializeBoard(config) {
+        this.#clearBoard();
+        for (let side of this.#sides) {
+            for (let i = 0; i < config.holesPerSide; ++i) {
+                let hole = instantiateDiv(side, "hole");
+                for (let j = 0; j < config.seedsPerHole; ++j)
+                    this.#generateSeed(hole);
             }
         }
     }
 
-    clearBoard(board) {
-        for (let i = 0; i < this.#sides.length; ++i) {
-            while (this.#sides[i].firstChild) {
-                this.#sides[i].removeChild(this.#sides[i].firstChild)
-            }
-        }
+    displayCurrentPlayer(playerName) {
+
+    }
+
+    #clearBoard() {
+        for (let side of this.#sides) side.textContent = "";
     }
 
     #placeSeed(hole) {
-        var div = document.createElement("div");
+        let div = document.createElement("div");
         div.classList.add("seed");
         hole.appendChild(div);
     }
@@ -45,10 +43,6 @@ export default class GameViewer {
         // generate y
         // generate rot
         this.#placeSeed(hole);
-    }
-
-    displayCurrentPlayer(playerName) {
-
     }
 
     #initializeElements() {

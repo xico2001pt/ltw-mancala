@@ -1,20 +1,19 @@
-import {changeVisibility} from "../utils.js"
+import GameBuilderViewer from "../viewers/GameBuilderViewer.js";
 import BoardConfiguration from "../models/BoardConfiguration.js"
 
 export default class GameBuilder {
+    #viewer;
     #gameController;
     //#menuController;
     //#authenticationController;
-    #navigation;
-    #menuContent;
-    #gameContent;
 
     #form;
 
     constructor(gameController) {
+        this.#viewer = new GameBuilderViewer();
         this.#gameController = gameController;
         this.#initialize();
-        this.#updateUI(false);
+        this.#viewer.updateUI(false);
     }
 
     startGame() {
@@ -24,27 +23,17 @@ export default class GameBuilder {
         let config = new BoardConfiguration(holesPerSide, seedsPerHole, playFirst);
         
         this.#gameController.startGame(config);
-        this.#updateUI(true);
+        this.#viewer.updateUI(true);
     }
 
     exitGame() {
-        this.#updateUI(false);
+        this.#viewer.updateUI(false);
     }
 
     #initialize() {
-        this.#navigation = document.getElementsByTagName("nav")[0];
-        this.#menuContent = document.getElementById("menu-content");
-        this.#gameContent = document.getElementById("game-content");
-
         this.#form = document.getElementById("game-config");
 
         document.getElementById("start-game-button").addEventListener("click", () => this.startGame());
         document.getElementById("exit-game-button").addEventListener("click", () => this.exitGame());
-    }
-    
-    #updateUI(playing) {
-        changeVisibility(this.#navigation, !playing);
-        changeVisibility(this.#menuContent, !playing);
-        changeVisibility(this.#gameContent, playing);
     }
 }

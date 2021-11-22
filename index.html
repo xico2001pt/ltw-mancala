@@ -41,19 +41,21 @@
                 </table>
             </div>
 
-            <div id="navigation-authentication">
-                <div id="authentication-area">
-                    <input class="navigation-input-field" type="text" placeholder="Nickname" maxlength="25" required>
-                    <input class="navigation-input-field" type="password" placeholder="Password" maxlength="25" required>
+            <div id="user-area">
+                <div id="navigation-authentication">
+                    <div id="authentication-area">
+                        <input class="navigation-input-field" type="text" placeholder="Nickname" maxlength="25" required>
+                        <input class="navigation-input-field" type="password" placeholder="Password" maxlength="25" required>
+                    </div>
+                    <div id="navigation-authentication-buttons">
+                        <button type="button" id="register-button" class="deselected-button">Register</button>
+                        <button type="button" id="login-button" class="selected-button">Login</button>
+                    </div>
                 </div>
-                <div id="navigation-authentication-buttons">
-                    <button type="button" id="register-button" class="deselected-button">Register</button>
-                    <button type="button" id="login-button" class="selected-button">Login</button>
+                <div id="navigation-logout">
+                    <p>Welcome, $Username$</p>
+                    <button type="button" id="logout-button" class="navigation-input-button deselected-button">Logout</button>
                 </div>
-            </div>
-            <div id="navigation-logout">
-                <p>Welcome, $Username$</p>
-                <button type="button" id="logout-button" class="navigation-input-button deselected-button">Logout</button>
             </div>
         </nav>
 
@@ -69,13 +71,11 @@
                             <table>
                                 <tr>
                                     <td>Holes per side:</td>
-                                    <td><input name="holesPerSide" type="range" min="4" max="10" value="6" class="slider" oninput="this.parentNode.nextElementSibling.childNodes[0].value = this.value"></td>
-                                    <td><output>6</output></td>
+                                    <td><input name="holesPerSide" type="range" min="4" max="10" value="6" class="slider deselected-button"></td>
                                 </tr>
                                 <tr>
                                     <td>Seeds per hole:</td>
-                                    <td><input name="seedsPerHole" type="range" min="4" max="8" value="4" class="slider" oninput="this.parentNode.nextElementSibling.childNodes[0].value = this.value"></td>
-                                    <td><output>4</output></td>
+                                    <td><input name="seedsPerHole" type="range" min="4" max="8" value="4" class="slider deselected-button"></td>
                                 </tr>
                                 <tr>
                                     <td>Play first:</td>
@@ -84,7 +84,7 @@
                                 <tr>
                                     <td>Difficulty:</td>
                                     <td>
-                                        <select>
+                                        <select class="deselected-button">
                                             <option value="easy">Easy</option>
                                             <option value="medium">Medium</option>
                                             <option value="hard">Hard</option>

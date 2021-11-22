@@ -28,8 +28,9 @@
 }
 
 #play-content table {
-    margin: auto;
-    margin-top: 20px;
+    width: 100%;
+    margin-top: 15px;
+    margin-bottom: 15px;
     text-align: left;
 }
 
@@ -53,31 +54,26 @@
 .slider {
     -webkit-appearance: none;  /* Override default CSS styles */
     appearance: none;
-    background: rgb(199, 148, 24);
-    border-radius: 10px;
+    border-radius: 5px;
+    width: 100%;
+    height: 30px;
 }
 
-.slider::-webkit-slider-thumb { /* Penso que isto nao funciona em Firefox */
+.slider::-webkit-slider-thumb, .slider::-moz-range-thumb {
     -webkit-appearance: none; /* Override default look */
-    background: rgb(219, 52, 78);
-    width: 15px;
-    height: 15px;
-    border-radius: 10px;
-}
-
-.slider::-webkit-slider-thumb:hover {
-    transition: 0.4s;
-    background: rgb(148, 38, 55);
+    background-color: rgb(199, 148, 24);
+    width: 10%;
+    height: 100%;
+    border: 0px;
+    border-radius: 5px;
 }
 
 #singleplayer-options select {
-    background-color: rgb(199, 148, 24);
     text-align: center;
     font-size: medium;
     font-weight: bold;
-}
-
-#singleplayer-options select:hover {
-    transition: 0.05s;
-    background-color: rgb(163, 123, 21);
+    width: 100%;
+    height: 30px;
+    border: none;
+    border-radius: 5px;
 }

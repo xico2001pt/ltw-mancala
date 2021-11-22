@@ -1,3 +1,13 @@
+#user-area {
+    height: 125px;
+    display: flex;
+    align-items: flex-end;
+}
+
+#navigation-authentication, #navigation-logout {
+    width: 100%;
+}
+
 #navigation-authentication {
     display: block;
 }
@@ -46,7 +56,6 @@ input {
 }
 
 #navigation-authentication-buttons button {
-    color: rgb(216, 233, 240);
     font-weight: bold;
     font-size: medium;
     width: 50%;

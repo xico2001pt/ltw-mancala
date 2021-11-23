@@ -28,6 +28,29 @@ export default class GameViewer {
 
     }
 
+    getHole(sideIdx, holeIdx) {
+        return this.#sides[sideIdx].childNodes[holeIdx];
+    }
+
+    updateBoard(board) {
+        for (let i = 0; i < board.getNumOfSides(); ++i) {
+            for (let j = 0; j < board.getHolesPerSide(); ++j) {
+                let visualJ = (i == 0 ? board.getHolesPerSide() - j - 1 : j);
+                this.#updateHole(this.getHole(i, j), board.getSide(i).getHole(visualJ).getNumOfSeeds());
+            }
+            this.#updateHole(this.#storages[i], board.getSide(i).getStorage().getNumOfSeeds());
+        }
+        
+
+    }
+
+    #updateHole(hole, newNumOfSeeds) {
+        let currentSeeds = hole.childNodes.length;
+
+        if (newNumOfSeeds > currentSeeds) for (let i = 0; i < newNumOfSeeds - currentSeeds; ++i) this.#generateSeed(hole);
+        else if (newNumOfSeeds < currentSeeds) for (let i = 0; i < currentSeeds - newNumOfSeeds; ++i) hole.firstChild.remove();
+    }
+
     #clearBoard() {
         for (let side of this.#sides) side.textContent = "";
     }

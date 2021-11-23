@@ -28,6 +28,8 @@
     background: radial-gradient(farthest-corner, rgb(30, 32, 35) 5%, rgb(57, 62, 70) 100%);
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
     border-radius: 4vw;
+    padding: 1vw;
+    box-sizing: border-box;
 }
 
 .storage {
@@ -37,8 +39,8 @@
 .seed {
     background-color: rgb(199, 148, 24);
     background-image: linear-gradient(rgb(199, 148, 24), rgb(236, 203, 119), rgb(199, 148, 24));
-    height: 20px;
-    width: 40px;
+    height: 2vh;
+    width: 2vw;
     margin: 5px;
     border-radius: 50%;
     align-self: center;

@@ -19,4 +19,8 @@ export default class Side {
     getNumHoles() {
         return this.#sideHoles.length;
     }
+
+    getStorage() {
+        return this.#storage;
+    }
 } 

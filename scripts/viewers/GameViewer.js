@@ -25,23 +25,21 @@ export default class GameViewer {
     }
 
     displayCurrentPlayer(playerName) {
-
+        this.#currentPlayerElement.textContent = "Current Player: " + playerName;
     }
 
     getHole(sideIdx, holeIdx) {
-        return this.#sides[sideIdx].childNodes[holeIdx];
+        let holes = this.#sides[sideIdx].childNodes;
+        return holes[sideIdx == 0 ? holes.length - holeIdx - 1 : holeIdx];
     }
 
     updateBoard(board) {
         for (let i = 0; i < board.getNumOfSides(); ++i) {
             for (let j = 0; j < board.getHolesPerSide(); ++j) {
-                let visualJ = (i == 0 ? board.getHolesPerSide() - j - 1 : j);
-                this.#updateHole(this.getHole(i, j), board.getSide(i).getHole(visualJ).getNumOfSeeds());
+                this.#updateHole(this.getHole(i, j), board.getSide(i).getHole(j).getNumOfSeeds());
             }
             this.#updateHole(this.#storages[i], board.getSide(i).getStorage().getNumOfSeeds());
         }
-        
-
     }
 
     #updateHole(hole, newNumOfSeeds) {
@@ -53,6 +51,7 @@ export default class GameViewer {
 
     #clearBoard() {
         for (let side of this.#sides) side.textContent = "";
+        for (let storage of this.#storages) storage.textContent = "";
     }
 
     #placeSeed(hole) {
@@ -76,6 +75,6 @@ export default class GameViewer {
 
         this.#sides = document.getElementsByClassName("side");
 
-        // initialize current player text
+        this.#currentPlayerElement = document.getElementById("current-player");
     }
 }

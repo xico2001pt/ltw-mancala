@@ -14,14 +14,16 @@ export default class GameController {
     startGame(config) {
         this.#board = new Board(config.holesPerSide, config.seedsPerHole);
         this.#viewer.initializeBoard(config);
-        this.#currentPlayer = 1;
+        this.#currentPlayer = +config.firstPlayer;
 
         this.#initializeButtons();
+        this.#viewer.displayCurrentPlayer(this.#currentPlayer);
     }
 
     playHole(sideIdx, holeIdx) {
+        if (this.#currentPlayer != sideIdx) return;  // Disable enemy holes selection
         let seeds = this.#board.getSide(sideIdx).getHole(holeIdx).getNumOfSeeds();
-        if (seeds == 0) return;
+        if (seeds == 0) return;  // Disable empty hole selection
 
         this.#board.getSide(sideIdx).getHole(holeIdx).setNumOfSeeds(0);
 
@@ -32,7 +34,7 @@ export default class GameController {
             lastHole = hole;
             if (hole >= this.#board.getHolesPerSide()) {
                 this.#board.getSide(side).getStorage().incrementSeed();
-                side = (side + 1) % 2;
+                side = this.#getNextSide(side);
                 hole = 0;
             } else {
                 this.#board.getSide(side).getHole(hole).incrementSeed();
@@ -46,28 +48,42 @@ export default class GameController {
     }
 
     #playVerification(lastSide, lastHole) {
-        console.log(lastHole);
-        if (lastHole == this.#board.getHolesPerSide()) return;
-        if (lastSide == this.#currentPlayer && this.#board.getSide(lastSide).getHole(lastHole).getNumOfSeeds() == 1) {
-            let enemyHole = this.#board.getSide((lastSide + 1) % 2).getHole(this.#board.getHolesPerSide() - lastHole - 1);
-            let seeds = enemyHole.getNumOfSeeds();
-            console.log(seeds);
-            this.#board.getSide(lastSide).getStorage().setNumOfSeeds(this.#board.getSide(lastSide).getStorage().getNumOfSeeds() + seeds + 1);
-            enemyHole.setNumOfSeeds(0);
-            this.#board.getSide(lastSide).getHole(lastHole).setNumOfSeeds(0);
+        if (lastSide == this.#currentPlayer) {  // Se o ultimo buraco é do lado do jogador
+            if (lastHole == this.#board.getHolesPerSide()) return;  // Se o ultimo buraco é um armazem
+            else if (this.#board.getSide(lastSide).getHole(lastHole).getNumOfSeeds() == 1) {  // Se o ultimo buraco está vazio (== 1, pois a verificação é feita depois da jogada)
+                let enemyHole = this.#board.getSide(this.#getNextSide(lastSide)).getHole(this.#board.getHolesPerSide() - lastHole - 1);
+                let seeds = enemyHole.getNumOfSeeds();
+                this.#board.getSide(lastSide).getStorage().setNumOfSeeds(this.#board.getSide(lastSide).getStorage().getNumOfSeeds() + seeds + 1);
+                enemyHole.setNumOfSeeds(0);
+                this.#board.getSide(lastSide).getHole(lastHole).setNumOfSeeds(0);
+            }
         }
 
-        //change player turn
-        // check game over
+        this.#changePlayer();
+        // se isGameOver(), chamar rotina gameOver()
+    }
+
+    #changePlayer() {
+        this.#currentPlayer = this.#getNextSide(this.#currentPlayer)
+        this.#viewer.displayCurrentPlayer(this.#currentPlayer);
+    }
+
+    #isGameOver() {
+        // acaba se a soma da seeds nas storage é igual ao numero de sementes por buraco vezes o numero de buracos
+        // acaba se um dos jogadores tiver o seu lado sem sementes
+        // senão, n acaba
     }
 
     #initializeButtons() {
         // Todo: change 2
         for (let i = 0; i < 2; ++i) {
             for (let j = 0; j < this.#board.getHolesPerSide(); ++j) {
-                let visualJ = (i == 0 ? this.#board.getHolesPerSide() - j - 1 : j);
-                this.#viewer.getHole(i, j).onclick = (() => this.playHole(i, visualJ));
+                this.#viewer.getHole(i, j).onclick = (() => this.playHole(i, j));
             }
         }
+    }
+
+    #getNextSide(side) {
+        return (side + 1) % this.#board.getNumOfSides();
     }
 }

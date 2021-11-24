@@ -23,4 +23,12 @@ export default class Side {
     getStorage() {
         return this.#storage;
     }
+
+    getNumOfSeeds() {
+        let counter = 0;
+        for (let i = 0; i < this.#sideHoles.length; ++i) {
+            counter += this.#sideHoles[i].getNumOfSeeds();
+        }
+        return counter;
+    }
 } 

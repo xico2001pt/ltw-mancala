@@ -1,12 +1,15 @@
 import Board from "../models/Board.js"
+import PopUpViewer from "../viewers/PopUpViewer.js";
 import { instantiateDiv } from "../utils.js";
 
 export default class GameViewer {
+    #popUpViewer;
     #currentPlayerElement;
     #sides;
     #storages;
 
     constructor() {
+        this.#popUpViewer = new PopUpViewer();
         this.#sides = [];
         this.#storages = [];
 
@@ -25,7 +28,11 @@ export default class GameViewer {
     }
 
     displayCurrentPlayer(playerName) {
-        this.#currentPlayerElement.textContent = "Current Player: " + playerName;
+        this.#currentPlayerElement.textContent = "Current Player: " + playerName;  // TODO: IT'S YOUR TURN
+    }
+
+    displayPopUp(popUp) {
+        this.#popUpViewer.instantiate(popUp);
     }
 
     getHole(sideIdx, holeIdx) {
@@ -34,12 +41,16 @@ export default class GameViewer {
     }
 
     updateBoard(board) {
-        for (let i = 0; i < board.getNumOfSides(); ++i) {
+        for (let i = 0; i < Board.getNumOfSides(); ++i) {
             for (let j = 0; j < board.getHolesPerSide(); ++j) {
                 this.#updateHole(this.getHole(i, j), board.getSide(i).getHole(j).getNumOfSeeds());
             }
             this.#updateHole(this.#storages[i], board.getSide(i).getStorage().getNumOfSeeds());
         }
+    }
+
+    collectSideSeeds(notEndgameSideIdx) {
+        // TODO: COLLECT ALL SEEDS FROM THIS SIDE AND PUT THEM IN THE STORAGE
     }
 
     #updateHole(hole, newNumOfSeeds) {

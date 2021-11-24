@@ -11,7 +11,7 @@ export default class Board {
         this.#holesPerSide = numOfHoles;
     }
 
-    getNumOfSides() {
+    static getNumOfSides() {
         return 2;
     }
 

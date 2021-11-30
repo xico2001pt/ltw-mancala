@@ -1,19 +1,29 @@
 export default class PopUp {
-    #playerWinner;
-    #playerLoser;
+    #title;
+    #message;
+    #buttonText;
     #callback;
 
-    constructor(playerWinner, playerLoser, callback) {
-        this.#playerWinner = playerWinner;
-        this.#playerLoser = playerLoser;
+    constructor(title, message, buttonText, callback) {
+        this.#title = title;
+        this.#message = message;
+        this.#buttonText = buttonText;
         this.#callback = callback;
     }
 
-    getPlayerWinner() {
-        return this.#playerWinner;
+    getTitle() {
+        return this.#title;
     }
 
-    getPlayerLoser() {
-        return this.#playerLoser;
+    getMessage() {
+        return this.#message;
+    }
+
+    getButtonText() {
+        return this.#buttonText;
+    }
+
+    getCallback() {
+        return this.#callback;
     }
 }

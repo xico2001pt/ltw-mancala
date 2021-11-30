@@ -32,6 +32,11 @@
     box-sizing: border-box;
 }
 
+.hole:hover {
+    transition: 0.4s;
+    background: radial-gradient(farthest-corner, rgb(46, 50, 54) 5%, rgb(82, 89, 100) 100%);
+}
+
 .storage {
     height: 95%;
 }

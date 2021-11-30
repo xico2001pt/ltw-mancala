@@ -15,6 +15,11 @@ body {
     opacity: 0.8;
 }
 
+.selected-button, .deselected-button {
+    cursor: pointer;
+    user-select: none;
+}
+
 .selected-button {
     background-color: rgb(199, 148, 24);
 }

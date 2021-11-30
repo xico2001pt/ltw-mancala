@@ -1,7 +1,7 @@
 import GameViewer from "../viewers/GameViewer.js"
 import Board from "../models/Board.js"
 import Player from "../models/Player.js";
-import PopUp from "../models/PopUp.js";
+import PopUpController from "../controllers/PopUpController.js"
 
 export default class GameController {
     #viewer;
@@ -25,7 +25,7 @@ export default class GameController {
         this.#gameFinished = false;
 
         this.#initializeButtons();
-        this.#viewer.displayCurrentPlayer(this.#currentPlayer);
+        this.#viewer.displayCurrentPlayer(this.#players[this.#currentPlayer].getName());
     }
 
     playHole(sideIdx, holeIdx) {
@@ -62,10 +62,12 @@ export default class GameController {
             if (lastHole == this.#board.getHolesPerSide()) changePlayer = false;  // Se o ultimo buraco é um armazem
             else if (this.#board.getSide(lastSide).getHole(lastHole).getNumOfSeeds() == 1) {  // Se o ultimo buraco está vazio (== 1, pois a verificação é feita depois da jogada)
                 let enemyHole = this.#board.getSide(GameController.#getNextSide(lastSide)).getHole(this.#board.getHolesPerSide() - lastHole - 1);
-                let seeds = enemyHole.getNumOfSeeds();
-                this.#board.getSide(lastSide).getStorage().setNumOfSeeds(this.#board.getSide(lastSide).getStorage().getNumOfSeeds() + seeds + 1);
-                enemyHole.setNumOfSeeds(0);
-                this.#board.getSide(lastSide).getHole(lastHole).setNumOfSeeds(0);
+                if (enemyHole.getNumOfSeeds() > 0) {  // Enemy hole isn't empty
+                    let seeds = enemyHole.getNumOfSeeds();
+                    this.#board.getSide(lastSide).getStorage().setNumOfSeeds(this.#board.getSide(lastSide).getStorage().getNumOfSeeds() + seeds + 1);
+                    enemyHole.setNumOfSeeds(0);
+                    this.#board.getSide(lastSide).getHole(lastHole).setNumOfSeeds(0);
+                }
             }
         }
 
@@ -94,15 +96,25 @@ export default class GameController {
     #gameOver(endgameSide) {
         this.#gameFinished = true;
 
-        // pegar sementes no lado que tem sementes e colocar na storage
+        // Recall remaining seeds to the storage
         let notEndgameSideIdx = GameController.#getNextSide(endgameSide);
         let notEndgameSide = this.#board.getSide(notEndgameSideIdx);
         if (notEndgameSide.getNumOfSeeds() > 0) {
             notEndgameSide.getStorage().setNumOfSeeds(notEndgameSide.getNumOfSeeds() + notEndgameSide.getStorage().getNumOfSeeds());
-            this.#viewer.collectSideSeeds(notEndgameSideIdx);
+            for (let i = 0; i < notEndgameSide.getNumHoles(); ++i) {
+                notEndgameSide.getHole(i).setNumOfSeeds(0);
+            }
         }
-        //let popUp = new PopUp();
-        //this.#viewer.displayPopUp(popUp);  // invocar pop up
+
+        let winnerIdx = this.#getWinner();
+        let winner = this.#players[winnerIdx];
+        // let looser = this.#players[GameController.#getNextSide(winnerIdx)]; // TODO: talvez seja preciso para leaderboard
+        
+        PopUpController.instance.instantiateMessagePopUp("Game Over", 
+        winner.getName() + " wins the game.\n\n" + this.#players[0].getName() + ": " + this.#players[0].getScore() + " points\n" + this.#players[1].getName() + ": " + this.#players[1].getScore() + " points\n",
+        "Return", null); // TODO: NULL
+
+        // TODO: UPDATE LEADERBOARD
     }
 
     #initializeButtons() {
@@ -111,6 +123,14 @@ export default class GameController {
                 this.#viewer.getHole(i, j).onclick = (() => this.playHole(i, j));
             }
         }
+    }
+
+    #getWinner() {
+        // TODO: CHECK DRAW
+        let player1score = this.#players[0].getScore();
+        let player2score = this.#players[1].getScore();
+        if (player1score > player2score) return 0;
+        else return 1;
     }
 
     static #getNextSide(side) {

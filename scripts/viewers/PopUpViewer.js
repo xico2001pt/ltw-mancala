@@ -13,7 +13,7 @@ export default class PopUpViewer {
 
     instantiatePopUp(popUp) {
         this.#title.textContent = popUp.getTitle();
-        this.#message.textContent = popUp.getMessage();
+        this.#message.innerHTML = popUp.getMessage();
         this.#button.textContent = popUp.getButtonText();
 
         if (popUp.getCallback() != null) this.#button.addEventListener("click", popUp.getCallback());

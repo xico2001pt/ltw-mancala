@@ -22,6 +22,7 @@ export default class GameViewer {
                     this.#generateSeed(hole);
             }
         }
+        for (let i = 0; i < config.holesPerSide; ++i) this.#sides[1].childNodes[i].classList.add("selectable-hole");
     }
 
     displayCurrentPlayer(playerName) {

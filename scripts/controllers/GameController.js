@@ -5,13 +5,16 @@ import PopUpController from "../controllers/PopUpController.js"
 
 export default class GameController {
     #viewer;
+    #gameStateController;
+
     #board;
     #players;
     #currentPlayer;
     #gameFinished;
 
-    constructor() {
+    constructor(gameStateController) {
         this.#viewer = new GameViewer();
+        this.#gameStateController = gameStateController;
         this.#board = null;
         this.#players = [];
     }
@@ -19,7 +22,7 @@ export default class GameController {
     startGame(config, isSingleplayer) {
         this.#board = new Board(config.holesPerSide, config.seedsPerHole);
         this.#viewer.initializeBoard(config);
-        this.#players[1] = new Player(1, "n00b", false);  // TODO: GET PLAYER NAME
+        this.#players[1] = new Player(1, "Guest", false);  // TODO: GET PLAYER NAME
         this.#players[0] = new Player(0, "Computer", isSingleplayer);  // TODO: GET NAME IF NOT SINGLEPLAYER
         this.#currentPlayer = +config.firstPlayer;
         this.#gameFinished = false;
@@ -106,15 +109,24 @@ export default class GameController {
             }
         }
 
+        // Update players score
+        this.#players[0].setScore(this.#board.getSide(0).getStorage().getNumOfSeeds());
+        this.#players[1].setScore(this.#board.getSide(1).getStorage().getNumOfSeeds());
+
         let winnerIdx = this.#getWinner();
         let winner = this.#players[winnerIdx];
         // let looser = this.#players[GameController.#getNextSide(winnerIdx)]; // TODO: talvez seja preciso para leaderboard
         
         PopUpController.instance.instantiateMessagePopUp("Game Over", 
-        winner.getName() + " wins the game.\n\n" + this.#players[0].getName() + ": " + this.#players[0].getScore() + " points\n" + this.#players[1].getName() + ": " + this.#players[1].getScore() + " points\n",
-        "Return", null); // TODO: NULL
+        winner.getName() + " wins the game.<br><br>" + this.#players[0].getName() + ": " + this.#players[0].getScore() + " points<br>" + this.#players[1].getName() + ": " + this.#players[1].getScore() + " points",
+        "Return", () => this.#gameStateController.exitGame());
 
         // TODO: UPDATE LEADERBOARD
+    }
+
+    #giveUp() {
+        // TODO: GIVE UP GAME
+        this.#gameStateController.exitGame();
     }
 
     #initializeButtons() {
@@ -123,6 +135,8 @@ export default class GameController {
                 this.#viewer.getHole(i, j).onclick = (() => this.playHole(i, j));
             }
         }
+
+        document.getElementById("leave-game-button").addEventListener("click", () => this.#giveUp());
     }
 
     #getWinner() {

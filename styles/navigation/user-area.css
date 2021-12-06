@@ -36,7 +36,6 @@ input {
 }
 
 .navigation-input-field:hover, .navigation-input-field:focus {
-    background-color: rgb(59, 59, 71);
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.4);
     outline: none;
 }

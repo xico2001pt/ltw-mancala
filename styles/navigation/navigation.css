@@ -9,12 +9,8 @@ nav {
     box-shadow: -3px 0px 10px rgba(0, 0, 0, 0.6);
 }
 
-#navigation-logo {
-    
-}
-
 #navigation-logo img {
-    width: 75px;
+    height: 125px;
     display: block;
     margin: auto;
     padding: 10px;

@@ -5,6 +5,7 @@
 
 #leave-game-button {
     float: left;
+    cursor: pointer;
 }
 
 #game-header p {

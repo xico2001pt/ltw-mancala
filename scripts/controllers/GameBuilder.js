@@ -23,7 +23,7 @@ export default class GameBuilder {
         let playFirst = this.#form.playFirst.checked;
         let config = new BoardConfiguration(holesPerSide, seedsPerHole, playFirst);
         
-        this.#gameController.startGame(config);
+        this.#gameController.startGame(config, true);
         this.#gameStateController.startGame();
     }
 

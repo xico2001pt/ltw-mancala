@@ -11,6 +11,16 @@ export default class Board {
         this.#holesPerSide = numOfHoles;
     }
 
+    copy() {
+        let board = new Board(this.#holesPerSide, 0);
+        for (let i = 0; i < Board.getNumOfSides(); ++i) {
+            for (let j = 0; j < this.getHolesPerSide(); ++j) {
+                board.getSide(i).getHole(j).setNumOfSeeds(this.getSide(i).getHole(j).getNumOfSeeds());
+            }
+        }
+        return board;
+    }
+
     static getNumOfSides() {
         return 2;
     }

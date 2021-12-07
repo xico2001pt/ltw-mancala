@@ -31,50 +31,61 @@ export default class GameController {
         this.#viewer.displayCurrentPlayer(this.#players[this.#currentPlayer].getName());
     }
 
-    playHole(sideIdx, holeIdx) {
-        if (this.#gameFinished) return;
-        if (this.#currentPlayer != sideIdx) return;  // Disable enemy holes selection
-        let seeds = this.#board.getSide(sideIdx).getHole(holeIdx).getNumOfSeeds();
+    #playHole(board, sideIdx, holeIdx) {
+        let seeds = board.getSide(sideIdx).getHole(holeIdx).getNumOfSeeds();
         if (seeds == 0) return;  // Disable empty hole selection
 
-        this.#board.getSide(sideIdx).getHole(holeIdx).setNumOfSeeds(0);
+        board.getSide(sideIdx).getHole(holeIdx).setNumOfSeeds(0);
 
         let side = sideIdx, hole = holeIdx + 1, lastSide, lastHole;
 
         while (seeds > 0) {
             lastSide = side;
             lastHole = hole;
-            if (hole >= this.#board.getHolesPerSide()) {
-                this.#board.getSide(side).getStorage().incrementSeed();
+            if (hole >= board.getHolesPerSide()) {
+                board.getSide(side).getStorage().incrementSeed();
                 side = GameController.#getNextSide(side);
                 hole = 0;
             } else {
-                this.#board.getSide(side).getHole(hole).incrementSeed();
+                board.getSide(side).getHole(hole).incrementSeed();
                 ++hole;
             }
             --seeds;
         }
 
-        this.#playVerification(lastSide, lastHole);
+        return {lastSide, lastHole};
+    }
+
+    playHoleHuman(sideIdx, holeIdx) {
+        if (this.#gameFinished) return;
+        if (GameController.#isEnemyPlayer(this.#currentPlayer)) return;  // Disable moves in enemy turn
+        if (this.#currentPlayer != sideIdx) return;  // Disable enemy holes selection
+
+        let result = this.#playHole(this.#board, sideIdx, holeIdx);
+        this.#playVerificationOriginal(result[0], result[1]);
         this.#viewer.updateBoard(this.#board);
     }
 
-    #playVerification(lastSide, lastHole) {
-        let changePlayer = true;
+    #playVerification(board, lastSide, lastHole) {
         if (lastSide == this.#currentPlayer) {  // Se o ultimo buraco é do lado do jogador
-            if (lastHole == this.#board.getHolesPerSide()) changePlayer = false;  // Se o ultimo buraco é um armazem
-            else if (this.#board.getSide(lastSide).getHole(lastHole).getNumOfSeeds() == 1) {  // Se o ultimo buraco está vazio (== 1, pois a verificação é feita depois da jogada)
-                let enemyHole = this.#board.getSide(GameController.#getNextSide(lastSide)).getHole(this.#board.getHolesPerSide() - lastHole - 1);
+            if (lastHole == board.getHolesPerSide()) return false;  // Se o ultimo buraco é um armazem
+            else if (board.getSide(lastSide).getHole(lastHole).getNumOfSeeds() == 1) {  // Se o ultimo buraco está vazio (== 1, pois a verificação é feita depois da jogada)
+                let enemyHole = board.getSide(GameController.#getNextSide(lastSide)).getHole(board.getHolesPerSide() - lastHole - 1);
                 if (enemyHole.getNumOfSeeds() > 0) {  // Enemy hole isn't empty
                     let seeds = enemyHole.getNumOfSeeds();
-                    this.#board.getSide(lastSide).getStorage().setNumOfSeeds(this.#board.getSide(lastSide).getStorage().getNumOfSeeds() + seeds + 1);
+                    board.getSide(lastSide).getStorage().setNumOfSeeds(board.getSide(lastSide).getStorage().getNumOfSeeds() + seeds + 1);
                     enemyHole.setNumOfSeeds(0);
-                    this.#board.getSide(lastSide).getHole(lastHole).setNumOfSeeds(0);
+                    board.getSide(lastSide).getHole(lastHole).setNumOfSeeds(0);
                 }
             }
         }
+        return true;
+    }
 
-        let endgameSide = this.#isGameOver();
+    #playVerificationOriginal(lastSide, lastHole) {
+        let changePlayer = this.#playVerification(this.#board, lastSide, lastHole);
+
+        let endgameSide = this.#isGameOver(this.#board);
         if (endgameSide != null) {
             this.#gameOver(endgameSide);
             return;
@@ -86,11 +97,83 @@ export default class GameController {
     #changePlayer() {
         this.#currentPlayer = GameController.#getNextSide(this.#currentPlayer)
         this.#viewer.displayCurrentPlayer(this.#players[this.#currentPlayer].getName());
+
+        if (GameController.#isEnemyPlayer(this.#currentPlayer)) {
+            if (this.#players[this.#currentPlayer].getIsBot()) {
+                // wait random seconds
+                //console.log(this.#minimax(this.#board, 1, true)[1]);
+                let result = this.#playHole(this.#board, 0, this.#minimax(this.#board, 5, true)[1]);
+                this.#playVerificationOriginal(result[0], result[1]);
+                this.#viewer.updateBoard(this.#board);
+            }
+            // if bot
+                // wait random seconds
+                // aplicar minimax
+                // escolher melhor jogada
+            // if human
+        }
     }
 
-    #isGameOver() {
+    #minimax(board, depth, maximize) {
+        // If no more moves will be simulated or the game is over
+        if (depth == 0 || this.#isGameOver(board) != null) {
+            if (maximize) return [board.getSide(0).getStorage().getNumOfSeeds(), -1];
+            else return [board.getSide(1).getStorage().getNumOfSeeds(), -1];
+        }
+
+        let alpha;  // Optimized score
+        let bestHole = -1;
+        let copyBoard;  // Board used to simulate moves
+
+        let current;
+        // Maximize the score (current player is the AI)
+        if (maximize) {
+            alpha = -Infinity;
+
+            // Simulate every possible move
+            for (let hole = 0; hole < board.getHolesPerSide(); ++hole) {
+                // If it's a valid move
+                if (board.getSide(0).getHole(hole).getNumOfSeeds() > 0) {
+                    copyBoard = board.copy();
+                    let result = this.#playHole(copyBoard, 0, hole);
+                    this.#playVerification(copyBoard, result[0], result[1]);
+
+                    current = this.#minimax(copyBoard, depth-1, false)[0];
+                    if (current > alpha) {
+                        alpha = current;
+                        bestHole = hole;
+                    }
+                }
+            }
+        }
+
+        // Minimize opponent's score
+        else {
+            alpha = +Infinity;
+
+            // Simulate every possible move
+            for (let hole = 0; hole < board.getHolesPerSide(); ++hole) {
+                // If it's a valid move
+                if (board.getSide(1).getHole(hole).getNumOfSeeds() > 0) {
+                    copyBoard = board.copy();
+                    let result = this.#playHole(copyBoard, 1, hole);
+                    this.#playVerification(copyBoard, result[0], result[1]);
+
+                    current = this.#minimax(copyBoard, depth-1, true)[0];
+                    if (current < alpha) {
+                        alpha = current;
+                        bestHole = hole;
+                    };
+                }
+            }
+        }
+
+        return [alpha, bestHole];
+    }
+
+    #isGameOver(board) {
         for (let i = 0; i < Board.getNumOfSides(); ++i) {
-            if (this.#board.getSide(i).getNumOfSeeds() == 0)
+            if (board.getSide(i).getNumOfSeeds() == 0)
                 return i;
         }
         return null;
@@ -132,7 +215,7 @@ export default class GameController {
     #initializeButtons() {
         for (let i = 0; i < Board.getNumOfSides(); ++i) {
             for (let j = 0; j < this.#board.getHolesPerSide(); ++j) {
-                this.#viewer.getHole(i, j).onclick = (() => this.playHole(i, j));
+                this.#viewer.getHole(i, j).onclick = (() => this.playHoleHuman(i, j));
             }
         }
 
@@ -149,5 +232,9 @@ export default class GameController {
 
     static #getNextSide(side) {
         return (side + 1) % Board.getNumOfSides();
+    }
+
+    static #isEnemyPlayer(side) {
+        return side == 0;
     }
 }

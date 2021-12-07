@@ -1,9 +1,10 @@
 import GameViewer from "../viewers/GameViewer.js"
 import Board from "../models/Board.js"
-import Player from "../models/Player.js";
 import PopUpController from "../controllers/PopUpController.js"
 
 export default class GameController {
+    static DifficultyToDepth = [1,3,6];
+
     #viewer;
     #gameStateController;
 
@@ -19,11 +20,11 @@ export default class GameController {
         this.#players = [];
     }
 
-    startGame(config, isSingleplayer) {
+    startGame(config, players) {
         this.#board = new Board(config.holesPerSide, config.seedsPerHole);
         this.#viewer.initializeBoard(config);
-        this.#players[1] = new Player(1, "Guest", false);  // TODO: GET PLAYER NAME
-        this.#players[0] = new Player(0, "Computer", isSingleplayer);  // TODO: GET NAME IF NOT SINGLEPLAYER
+        this.#players[1] = players[1];
+        this.#players[0] = players[0];
         this.#currentPlayer = +config.firstPlayer;
         this.#gameFinished = false;
 
@@ -108,10 +109,9 @@ export default class GameController {
     #opponentPlay() {
         if (this.#players[this.#currentPlayer].getIsBot()) {
             // wait random seconds
-            let hole = this.#minimax(this.#board, 3, true)[1];
+            let hole = this.#minimax(this.#board, GameController.DifficultyToDepth[this.#players[this.#currentPlayer].getDifficulty()], true)[1];
             let result = this.#playHole(this.#board, 0, hole);
             this.#playVerificationOriginal(result[0], result[1]);
-            console.log("bot chose:", hole);
             this.#viewer.updateBoard(this.#board);
         }
         // if human
@@ -122,7 +122,6 @@ export default class GameController {
     #minimax(board, depth, maximize) {
         // If no more moves will be simulated or the game is over
         if (depth == 0 || this.#isGameOver(board) != null) {
-            console.log(board.getSide(0).getStorage().getNumOfSeeds(), board.getSide(1).getStorage().getNumOfSeeds());
             if (maximize) return [board.getSide(0).getStorage().getNumOfSeeds(), -1];
             else return [board.getSide(1).getStorage().getNumOfSeeds(), -1];
         }
@@ -141,7 +140,6 @@ export default class GameController {
             for (let hole = 0; hole < board.getHolesPerSide(); ++hole) {
                 // If it's a valid move
                 if (board.getSide(0).getHole(hole).getNumOfSeeds() > 0) {
-                    console.log("p2-h:", hole);
                     copyBoard = board.copy();
                     let result = this.#playHole(copyBoard, 0, hole);
                     changePlayer = this.#playVerification(copyBoard, result[0], result[1]);
@@ -163,7 +161,6 @@ export default class GameController {
             for (let hole = 0; hole < board.getHolesPerSide(); ++hole) {
                 // If it's a valid move
                 if (board.getSide(1).getHole(hole).getNumOfSeeds() > 0) {
-                    console.log("p1-h:", hole);
                     copyBoard = board.copy();
                     let result = this.#playHole(copyBoard, 1, hole);
                     changePlayer = this.#playVerification(copyBoard, result[0], result[1]);

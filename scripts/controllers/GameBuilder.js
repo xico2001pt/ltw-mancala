@@ -1,5 +1,6 @@
 import GameBuilderViewer from "../viewers/GameBuilderViewer.js";
 import BoardConfiguration from "../models/BoardConfiguration.js"
+import Player from "../models/Player.js";
 
 export default class GameBuilder {
     #viewer;
@@ -23,7 +24,8 @@ export default class GameBuilder {
         let playFirst = this.#form.playFirst.checked;
         let config = new BoardConfiguration(holesPerSide, seedsPerHole, playFirst);
         
-        this.#gameController.startGame(config, true);
+        let players = [new Player("Computer", this.#form.difficulty.value), new Player("Guest", -1)];
+        this.#gameController.startGame(config, players);
         this.#gameStateController.startGame();
     }
 

@@ -1,18 +1,12 @@
 export default class Player {
-    #id;
     #name;
-    #isBot;
+    #difficulty;  // If not a bot, then -1
     #score;
 
-    constructor(id, name, isBot) {
-        this.#id = id;
+    constructor(name, difficulty) {
         this.#name = name;
-        this.#isBot = isBot;
+        this.#difficulty = difficulty;
         this.#score = 0;
-    }
-
-    getId() {
-        return this.#id;
     }
 
     getName() {
@@ -20,7 +14,11 @@ export default class Player {
     }
 
     getIsBot() {
-        return this.#isBot;
+        return this.#difficulty >= 0;
+    }
+
+    getDifficulty() {
+        return this.#difficulty;
     }
 
     getScore() {

@@ -17,6 +17,7 @@ export default class Board {
             for (let j = 0; j < this.getHolesPerSide(); ++j) {
                 board.getSide(i).getHole(j).setNumOfSeeds(this.getSide(i).getHole(j).getNumOfSeeds());
             }
+            board.getSide(i).getStorage().setNumOfSeeds(this.getSide(i).getStorage().getNumOfSeeds());
         }
         return board;
     }

@@ -29,11 +29,13 @@ export default class GameController {
 
         this.#initializeButtons();
         this.#viewer.displayCurrentPlayer(this.#players[this.#currentPlayer].getName());
+
+        if (GameController.#isEnemyPlayer(this.#currentPlayer)) this.#opponentPlay();
     }
 
     #playHole(board, sideIdx, holeIdx) {
         let seeds = board.getSide(sideIdx).getHole(holeIdx).getNumOfSeeds();
-        if (seeds == 0) return;  // Disable empty hole selection
+        if (seeds == 0) return null;  // Disable empty hole selection
 
         board.getSide(sideIdx).getHole(holeIdx).setNumOfSeeds(0);
 
@@ -53,7 +55,7 @@ export default class GameController {
             --seeds;
         }
 
-        return {lastSide, lastHole};
+        return [lastSide, lastHole];
     }
 
     playHoleHuman(sideIdx, holeIdx) {
@@ -62,6 +64,8 @@ export default class GameController {
         if (this.#currentPlayer != sideIdx) return;  // Disable enemy holes selection
 
         let result = this.#playHole(this.#board, sideIdx, holeIdx);
+        if (result == null) return;
+
         this.#playVerificationOriginal(result[0], result[1]);
         this.#viewer.updateBoard(this.#board);
     }
@@ -98,25 +102,27 @@ export default class GameController {
         this.#currentPlayer = GameController.#getNextSide(this.#currentPlayer)
         this.#viewer.displayCurrentPlayer(this.#players[this.#currentPlayer].getName());
 
-        if (GameController.#isEnemyPlayer(this.#currentPlayer)) {
-            if (this.#players[this.#currentPlayer].getIsBot()) {
-                // wait random seconds
-                //console.log(this.#minimax(this.#board, 1, true)[1]);
-                let result = this.#playHole(this.#board, 0, this.#minimax(this.#board, 5, true)[1]);
-                this.#playVerificationOriginal(result[0], result[1]);
-                this.#viewer.updateBoard(this.#board);
-            }
-            // if bot
-                // wait random seconds
-                // aplicar minimax
-                // escolher melhor jogada
-            // if human
+        if (GameController.#isEnemyPlayer(this.#currentPlayer)) this.#opponentPlay();
+    }
+
+    #opponentPlay() {
+        if (this.#players[this.#currentPlayer].getIsBot()) {
+            // wait random seconds
+            let hole = this.#minimax(this.#board, 3, true)[1];
+            let result = this.#playHole(this.#board, 0, hole);
+            this.#playVerificationOriginal(result[0], result[1]);
+            console.log("bot chose:", hole);
+            this.#viewer.updateBoard(this.#board);
         }
+        // if human
+
+        if (GameController.#isEnemyPlayer(this.#currentPlayer)) this.#opponentPlay();
     }
 
     #minimax(board, depth, maximize) {
         // If no more moves will be simulated or the game is over
         if (depth == 0 || this.#isGameOver(board) != null) {
+            console.log(board.getSide(0).getStorage().getNumOfSeeds(), board.getSide(1).getStorage().getNumOfSeeds());
             if (maximize) return [board.getSide(0).getStorage().getNumOfSeeds(), -1];
             else return [board.getSide(1).getStorage().getNumOfSeeds(), -1];
         }
@@ -126,6 +132,7 @@ export default class GameController {
         let copyBoard;  // Board used to simulate moves
 
         let current;
+        let changePlayer;
         // Maximize the score (current player is the AI)
         if (maximize) {
             alpha = -Infinity;
@@ -134,11 +141,12 @@ export default class GameController {
             for (let hole = 0; hole < board.getHolesPerSide(); ++hole) {
                 // If it's a valid move
                 if (board.getSide(0).getHole(hole).getNumOfSeeds() > 0) {
+                    console.log("p2-h:", hole);
                     copyBoard = board.copy();
                     let result = this.#playHole(copyBoard, 0, hole);
-                    this.#playVerification(copyBoard, result[0], result[1]);
+                    changePlayer = this.#playVerification(copyBoard, result[0], result[1]);
 
-                    current = this.#minimax(copyBoard, depth-1, false)[0];
+                    current = this.#minimax(copyBoard, depth-1, !changePlayer)[0];
                     if (current > alpha) {
                         alpha = current;
                         bestHole = hole;
@@ -155,11 +163,12 @@ export default class GameController {
             for (let hole = 0; hole < board.getHolesPerSide(); ++hole) {
                 // If it's a valid move
                 if (board.getSide(1).getHole(hole).getNumOfSeeds() > 0) {
+                    console.log("p1-h:", hole);
                     copyBoard = board.copy();
                     let result = this.#playHole(copyBoard, 1, hole);
-                    this.#playVerification(copyBoard, result[0], result[1]);
+                    changePlayer = this.#playVerification(copyBoard, result[0], result[1]);
 
-                    current = this.#minimax(copyBoard, depth-1, true)[0];
+                    current = this.#minimax(copyBoard, depth-1, changePlayer)[0];
                     if (current < alpha) {
                         alpha = current;
                         bestHole = hole;
@@ -213,10 +222,8 @@ export default class GameController {
     }
 
     #initializeButtons() {
-        for (let i = 0; i < Board.getNumOfSides(); ++i) {
-            for (let j = 0; j < this.#board.getHolesPerSide(); ++j) {
-                this.#viewer.getHole(i, j).onclick = (() => this.playHoleHuman(i, j));
-            }
+        for (let hole = 0; hole < this.#board.getHolesPerSide(); ++hole) {
+                this.#viewer.getHole(1, hole).onclick = (() => this.playHoleHuman(1, hole));
         }
 
         document.getElementById("leave-game-button").addEventListener("click", () => this.#giveUp());

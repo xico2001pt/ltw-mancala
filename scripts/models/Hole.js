@@ -10,7 +10,7 @@ export default class Hole {
     }
 
     setNumOfSeeds(numOfSeeds) {
-        this.#numOfSeeds = numOfSeeds;
+        this.#numOfSeeds = parseInt(numOfSeeds);
     }
     
     incrementSeed() {

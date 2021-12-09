@@ -6,6 +6,8 @@ export default class Board {
     #holesPerSide;
 
     constructor(numOfHoles, numOfSeeds) {
+        numOfHoles = parseInt(numOfHoles);
+        numOfSeeds = parseInt(numOfSeeds);
         this.#side1 = new Side(numOfHoles, numOfSeeds);
         this.#side2 = new Side(numOfHoles, numOfSeeds);
         this.#holesPerSide = numOfHoles;

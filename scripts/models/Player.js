@@ -26,6 +26,6 @@ export default class Player {
     }
 
     setScore(score) {
-        this.#score = score;
+        this.#score = parseInt(score);
     }
 }

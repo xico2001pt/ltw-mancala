@@ -36,7 +36,7 @@ export default class GameController {
 
     #playHole(board, sideIdx, holeIdx) {
         let seeds = board.getSide(sideIdx).getHole(holeIdx).getNumOfSeeds();
-        if (seeds == 0) return null;  // Disable empty hole selection
+        if (seeds <= 0) return null;  // Disable empty hole selection
 
         board.getSide(sideIdx).getHole(holeIdx).setNumOfSeeds(0);
 
@@ -71,8 +71,8 @@ export default class GameController {
         this.#viewer.updateBoard(this.#board);
     }
 
-    #playVerification(board, lastSide, lastHole) {
-        if (lastSide == this.#currentPlayer) {  // Se o ultimo buraco é do lado do jogador
+    #playVerification(board, lastSide, lastHole, currentPlayer) {
+        if (lastSide == currentPlayer) {  // Se o ultimo buraco é do lado do jogador
             if (lastHole == board.getHolesPerSide()) return false;  // Se o ultimo buraco é um armazem
             else if (board.getSide(lastSide).getHole(lastHole).getNumOfSeeds() == 1) {  // Se o ultimo buraco está vazio (== 1, pois a verificação é feita depois da jogada)
                 let enemyHole = board.getSide(GameController.#getNextSide(lastSide)).getHole(board.getHolesPerSide() - lastHole - 1);
@@ -88,7 +88,7 @@ export default class GameController {
     }
 
     #playVerificationOriginal(lastSide, lastHole) {
-        let changePlayer = this.#playVerification(this.#board, lastSide, lastHole);
+        let changePlayer = this.#playVerification(this.#board, lastSide, lastHole, this.#currentPlayer);
 
         let endgameSide = this.#isGameOver(this.#board);
         if (endgameSide != null) {
@@ -106,17 +106,20 @@ export default class GameController {
         if (GameController.#isEnemyPlayer(this.#currentPlayer)) this.#opponentPlay();
     }
 
-    #opponentPlay() {
-        if (this.#players[this.#currentPlayer].getIsBot()) {
-            // wait random seconds
-            let hole = this.#minimax(this.#board, GameController.DifficultyToDepth[this.#players[this.#currentPlayer].getDifficulty()], true)[1];
-            let result = this.#playHole(this.#board, 0, hole);
-            this.#playVerificationOriginal(result[0], result[1]);
-            this.#viewer.updateBoard(this.#board);
-        }
-        // if human
+    #computerPlay() {
+        let hole = this.#minimax(this.#board, GameController.DifficultyToDepth[this.#players[this.#currentPlayer].getDifficulty()], true)[1];
+        let result = this.#playHole(this.#board, 0, hole);
+        this.#playVerificationOriginal(result[0], result[1]);
+        this.#viewer.updateBoard(this.#board);
 
         if (GameController.#isEnemyPlayer(this.#currentPlayer)) this.#opponentPlay();
+    }
+
+    #opponentPlay() {
+        if (this.#players[this.#currentPlayer].getIsBot()) {
+            setTimeout(() => this.#computerPlay(), 2000);  // TODO: randomize time
+        }
+        // if human
     }
 
     #minimax(board, depth, maximize) {
@@ -142,7 +145,7 @@ export default class GameController {
                 if (board.getSide(0).getHole(hole).getNumOfSeeds() > 0) {
                     copyBoard = board.copy();
                     let result = this.#playHole(copyBoard, 0, hole);
-                    changePlayer = this.#playVerification(copyBoard, result[0], result[1]);
+                    changePlayer = this.#playVerification(copyBoard, result[0], result[1], 0);
 
                     current = this.#minimax(copyBoard, depth-1, !changePlayer)[0];
                     if (current > alpha) {
@@ -163,7 +166,7 @@ export default class GameController {
                 if (board.getSide(1).getHole(hole).getNumOfSeeds() > 0) {
                     copyBoard = board.copy();
                     let result = this.#playHole(copyBoard, 1, hole);
-                    changePlayer = this.#playVerification(copyBoard, result[0], result[1]);
+                    changePlayer = this.#playVerification(copyBoard, result[0], result[1], 1);
 
                     current = this.#minimax(copyBoard, depth-1, changePlayer)[0];
                     if (current < alpha) {

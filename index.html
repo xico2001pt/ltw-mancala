@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 
+<!-- The icons used in this project were made by https://www.flaticon.com -->
 <html lang="en">
     <head>
         <meta charset="UTF-8">
+        <link rel="icon" href="assets/mancala-logo.png">
         <link rel="stylesheet" href="styles/mancala.css">
         <link rel="stylesheet" href="styles/navigation/navigation.css">
         <link rel="stylesheet" href="styles/navigation/menus.css">
@@ -21,7 +23,6 @@
     </head>
     <body>
         <nav>
-            <!-- Icons made by https://www.flaticon.com -->
             <div id="navigation-logo">
                 <img src="assets/mancala-logo.png" alt="Mancala Logo">
             </div>
@@ -54,7 +55,7 @@
                         <button type="button" id="login-button" class="selected-button">Login</button>
                     </div>
                 </div>
-                <div id="navigation-logout">
+                <div id="navigation-logout" class="hidden">
                     <p>Welcome, $Username$</p>
                     <button type="button" id="logout-button" class="navigation-input-button deselected-button">Logout</button>
                 </div>
@@ -73,11 +74,11 @@
                             <table>
                                 <tr>
                                     <td>Holes per side:</td>
-                                    <td><input name="holesPerSide" type="range" min="4" max="7" value="5" class="slider deselected-button"></td>
+                                    <td><input name="holesPerSide" type="number" onKeyDown="return false" min="4" max="7" value="5" class="number deselected-button"></td>
                                 </tr>
                                 <tr>
                                     <td>Seeds per hole:</td>
-                                    <td><input name="seedsPerHole" type="range" min="3" max="7" value="4" class="slider deselected-button"></td>
+                                    <td><input name="seedsPerHole" type="number" onKeyDown="return false" min="3" max="7" value="4" class="number deselected-button"></td>
                                 </tr>
                                 <tr>
                                     <td>Play first:</td>
@@ -98,7 +99,7 @@
                         </form>
                     </div>       
                 </div>
-                <div id="instructions-content">
+                <div id="instructions-content" class="hidden">
                     <h2>Board</h2>
                     <ul>
                         <li>Each player controls the holes on their side and the deposit to their right.</li>
@@ -123,7 +124,7 @@
                         <li>The player with more seeds on their deposit wins the game.</li>
                     </ul>
                 </div>
-                <div id="leaderboard-content">
+                <div id="leaderboard-content" class="hidden">
                     <table>
                         <tr>
                             <th>Username</th>
@@ -170,7 +171,7 @@
             </div>
         </main>
 
-        <div id="pop-up-wrapper">
+        <div id="pop-up-wrapper" class="hidden">
             <div id="pop-up">
                 <p id="pop-up-title">Title</p>
                 <p id="pop-up-message">Message</p>

@@ -18,3 +18,23 @@ export function instantiateElem(elem, parent, className) {
 export function instantiateDiv(parent, className) {
     return instantiateElem("div", parent, className);
 }
+
+export function randomFloat(minInclusive, maxExclusive) {
+    return Math.random() * (maxExclusive - minInclusive) + minInclusive;
+}
+
+export function randomInt(minInclusive, maxExclusive) {
+    minInclusive = Math.ceil(minInclusive);
+    maxExclusive = Math.floor(maxExclusive);
+    return Math.floor(randomFloat(minInclusive, maxExclusive));
+}
+
+export function shuffle(array) {
+    for (let i = 0; i < array.length; ++i) {
+        const j = Math.floor(Math.random() * array.length);
+        const temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+    return array;
+}

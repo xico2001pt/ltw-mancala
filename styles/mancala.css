@@ -10,6 +10,10 @@ body {
     color: rgb(238, 238, 238);
 }
 
+input:focus {
+    outline: none;
+}
+
 ::placeholder {
     color: white;
     opacity: 0.8;

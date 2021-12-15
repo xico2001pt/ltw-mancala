@@ -1,6 +1,7 @@
 import GameViewer from "../viewers/GameViewer.js"
 import Board from "../models/Board.js"
 import PopUpController from "../controllers/PopUpController.js"
+import { randomInt, shuffle } from "../utils.js";
 
 export default class GameController {
     static DifficultyToDepth = [1,3,6];
@@ -140,7 +141,8 @@ export default class GameController {
             alpha = -Infinity;
 
             // Simulate every possible move
-            for (let hole = 0; hole < board.getHolesPerSide(); ++hole) {
+            for (let hole of GameController.#randomHoleOrder(board.getHolesPerSide())) {
+                console.log(hole);
                 // If it's a valid move
                 if (board.getSide(0).getHole(hole).getNumOfSeeds() > 0) {
                     copyBoard = board.copy();
@@ -161,7 +163,7 @@ export default class GameController {
             alpha = +Infinity;
 
             // Simulate every possible move
-            for (let hole = 0; hole < board.getHolesPerSide(); ++hole) {
+            for (let hole of GameController.#randomHoleOrder(board.getHolesPerSide())) {
                 // If it's a valid move
                 if (board.getSide(1).getHole(hole).getNumOfSeeds() > 0) {
                     copyBoard = board.copy();
@@ -178,6 +180,10 @@ export default class GameController {
         }
 
         return [alpha, bestHole];
+    }
+
+    static #randomHoleOrder(numHoles) {
+        return shuffle(Array.from(Array(numHoles).keys()));
     }
 
     #isGameOver(board) {

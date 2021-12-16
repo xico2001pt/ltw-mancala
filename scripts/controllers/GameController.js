@@ -1,7 +1,7 @@
 import GameViewer from "../viewers/GameViewer.js"
 import Board from "../models/Board.js"
 import PopUpController from "../controllers/PopUpController.js"
-import { randomInt, shuffle } from "../utils.js";
+import { shuffle } from "../utils.js";
 
 export default class GameController {
     static DifficultyToDepth = [1,3,6];

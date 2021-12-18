@@ -12,7 +12,7 @@ function main() {
     let menuController = new MenuController(0);
     let authenticationController = new AuthenticationController();
     let gameController = new GameController(gameStateController);
-    let gameBuilder = new GameBuilder(gameStateController, gameController);
+    let gameBuilder = new GameBuilder(gameStateController, gameController, authenticationController);
 }
 
 main();

@@ -1,42 +1,57 @@
 import AuthenticationViewer from "../viewers/AuthenticationViewer.js";
+import ServerController from "./ServerController.js";
+import PopUpController from "../controllers/PopUpController.js";
 
 export default class AuthenticationController {
     #viewer;
     #loggedIn;
+    #credentials;
 
     constructor() {
         this.#viewer = new AuthenticationViewer();
         this.#initializeAuthentication();
+        this.#credentials = {"nick": "", "password": ""};
     }
 
     isLoggedIn() {
         return this.#loggedIn;
     }
 
-    register() {
-        // if valid
-            // create account
-            // login
-        this.login();
+    getCredentials() {
+        return this.#credentials;
     }
 
-    login() {
-        // if valid
-        this.#loggedIn = true;
-        this.#viewer.displayUserArea(this.#loggedIn);
+    enter() {
+        this.#credentials["nick"] = this.#viewer.getForm().nick.value;
+        this.#credentials["password"] = this.#viewer.getForm().pass.value;
+
+        ServerController.register(this.#credentials["nick"], this.#credentials["password"], this.#enterCallback.bind(this));
     }
     
     logout() {
         this.#loggedIn = false;
+        this.#viewer.displayUserArea(this.#loggedIn);
+    }
 
+    async #enterCallback(response) {
+        if (response.status == 200) {
+            this.#logIn();
+        } else {
+            let message = (await response.json())["error"] + ".";
+            PopUpController.instance.instantiateMessagePopUp("Authentication Error", message, "Return");
+        }
+    }
+
+    #logIn() {
+        this.#loggedIn = true;
+        this.#viewer.displayUsername(this.#credentials["nick"]);
         this.#viewer.displayUserArea(this.#loggedIn);
     }
 
     #initializeAuthentication() {
         this.logout();
 
-        document.getElementById("register-button").addEventListener("click", () => this.register());
-        document.getElementById("login-button").addEventListener("click", () => this.login());
+        document.getElementById("enter-button").addEventListener("click", () => this.enter());
         document.getElementById("logout-button").addEventListener("click", () => this.logout());
 
     }

@@ -46,17 +46,14 @@
 
             <div id="user-area">
                 <div id="navigation-authentication">
-                    <div id="authentication-area">
-                        <input class="navigation-input-field" type="text" placeholder="Nickname" maxlength="25" required>
-                        <input class="navigation-input-field" type="password" placeholder="Password" maxlength="25" required>
-                    </div>
-                    <div id="navigation-authentication-buttons">
-                        <button type="button" id="register-button" class="deselected-button">Register</button>
-                        <button type="button" id="login-button" class="selected-button">Login</button>
-                    </div>
+                    <form id="authentication-area">
+                        <input class="navigation-input-field" type="text" name="nick" placeholder="Nickname" maxlength="25" required>
+                        <input class="navigation-input-field" type="password" name="pass" placeholder="Password" maxlength="25" required>
+                    </form>
+                    <button type="button" id="enter-button" class="selected-button">Enter</button>
                 </div>
                 <div id="navigation-logout" class="hidden">
-                    <p>Welcome, $Username$</p>
+                    <p id="login-message">Welcome, $Username$</p>
                     <button type="button" id="logout-button" class="navigation-input-button deselected-button">Logout</button>
                 </div>
             </div>

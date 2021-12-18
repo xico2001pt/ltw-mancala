@@ -13,7 +13,7 @@ export default class PopUpController {
         this.#viewer = new PopUpViewer();
     }
 
-    instantiateMessagePopUp(title, message, buttonText, callback) {
+    instantiateMessagePopUp(title, message, buttonText, callback=null) {
         this.#viewer.instantiatePopUp(new PopUp(title, message, buttonText, callback));
         this.#viewer.open();
     }

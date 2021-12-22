@@ -1,5 +1,6 @@
 export default class ServerController {
     static #url = "http://twserver.alunos.dcc.fc.up.pt:8008/";
+    static #group = 99;
 
     static ranking(callback) {
         ServerController.request("ranking", callback);
@@ -8,9 +9,17 @@ export default class ServerController {
     static register(nick, pass, callback) {
         let request = {
             method: "POST",
-            body: ServerController.#parseJSON(["nick", "password"], [nick, pass])
+            body: JSON.stringify({"nick": nick, "password": pass})
         }
         ServerController.#request("register", callback, request);
+    }
+
+    static join(nick, pass, size, initial, callback) {
+        let request = {
+            method: "POST",
+            body: JSON.stringify({"group": ServerController.#group, "nick": nick, "password": pass, "size": size, "initial": initial})
+        }
+        ServerController.#request("join", callback, request);
     }
 
     static #request(path, callback, request=null) {
@@ -23,22 +32,4 @@ export default class ServerController {
         .then(callback)
         .catch(console.log);
     }
-
-    static #parseJSON(args, values) {
-        let res = {};
-        for (let i = 0; i < args.length; ++i) {
-            res[args[i]] = values[i];
-        }
-        return JSON.stringify(res);
-    }
-
-    /*
-    static #parseURLEncoded(args, values) {
-        let res = [];
-        for (let i = 0; i < args.length; ++i) {
-            res[i]= `${args[i]}=${values[i]}`;
-        }
-        return res.join('&');
-    }
-    */
 }

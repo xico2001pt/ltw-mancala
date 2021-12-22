@@ -66,35 +66,33 @@
                         <button type="button" id="singleplayer-button" class="gamemode-button selected-button">Singleplayer</button>
                         <button type="button" id="multiplayer-button" class="gamemode-button deselected-button">Multiplayer</button>
                     </div>
-                    <div id="singleplayer-options">
-                        <form id="game-config">
-                            <table>
-                                <tr>
-                                    <td>Holes per side:</td>
-                                    <td><input name="holesPerSide" type="number" onKeyDown="return false" min="4" max="7" value="5" class="number deselected-button"></td>
-                                </tr>
-                                <tr>
-                                    <td>Seeds per hole:</td>
-                                    <td><input name="seedsPerHole" type="number" onKeyDown="return false" min="3" max="7" value="4" class="number deselected-button"></td>
-                                </tr>
-                                <tr>
-                                    <td>Play first:</td>
-                                    <td><input name="playFirst" type="checkbox" class="checkbox"></td>
-                                </tr>
-                                <tr>
-                                    <td>Difficulty:</td>
-                                    <td>
-                                        <select name="difficulty" class="deselected-button">
-                                            <option value="0">Easy</option>
-                                            <option value="1">Medium</option>
-                                            <option value="2">Hard</option>
-                                        </select>
-                                    </td>
-                                </tr>
-                            </table>
-                            <button type="button" id="start-game-button" class="selected-button">Start Game</button>
-                        </form>
-                    </div>       
+                    <form id="game-config">
+                        <table>
+                            <tr>
+                                <td>Holes per side:</td>
+                                <td><input name="holesPerSide" type="number" onKeyDown="return false" min="4" max="7" value="5" class="number deselected-button"></td>
+                            </tr>
+                            <tr>
+                                <td>Seeds per hole:</td>
+                                <td><input name="seedsPerHole" type="number" onKeyDown="return false" min="3" max="7" value="4" class="number deselected-button"></td>
+                            </tr>
+                            <tr>
+                                <td>Play first:</td>
+                                <td><input name="playFirst" type="checkbox" class="checkbox"></td>
+                            </tr>
+                            <tr id="difficulty-option">
+                                <td>Difficulty:</td>
+                                <td>
+                                    <select name="difficulty" class="deselected-button">
+                                        <option value="0">Easy</option>
+                                        <option value="1">Medium</option>
+                                        <option value="2">Hard</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+                        <button type="button" id="start-game-button" class="selected-button">Start Game</button>
+                    </form>  
                 </div>
                 <div id="instructions-content" class="hidden">
                     <h2>Board</h2>

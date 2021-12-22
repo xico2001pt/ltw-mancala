@@ -10,7 +10,7 @@ export default class AuthenticationController {
     constructor() {
         this.#viewer = new AuthenticationViewer();
         this.#initializeAuthentication();
-        this.#credentials = {"nick": "", "password": ""};
+        this.#resetCredentials();
     }
 
     isLoggedIn() {
@@ -30,6 +30,7 @@ export default class AuthenticationController {
     
     logout() {
         this.#loggedIn = false;
+        this.#resetCredentials();
         this.#viewer.displayUserArea(this.#loggedIn);
     }
 
@@ -46,6 +47,10 @@ export default class AuthenticationController {
         this.#loggedIn = true;
         this.#viewer.displayUsername(this.#credentials["nick"]);
         this.#viewer.displayUserArea(this.#loggedIn);
+    }
+
+    #resetCredentials() {
+        this.#credentials = {"nick": undefined, "password": undefined};
     }
 
     #initializeAuthentication() {

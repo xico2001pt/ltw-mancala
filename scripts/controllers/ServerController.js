@@ -22,6 +22,22 @@ export default class ServerController {
         ServerController.#request("join", callback, request);
     }
 
+    static leave(nick, pass, game, callback) {
+        let request = {
+            method: "POST",
+            body: JSON.stringify({"nick": nick, "pass": pass, "game": game})
+        }
+        ServerController.#request("leave", callback, request);
+    }
+
+    static notify(nick, pass, game, move, callback) {
+        let request = {
+            method: "POST",
+            body: JSON.stringify({"nick": nick, "pass": pass, "game": game, "move": move})
+        }
+        ServerController.#request("notify", callback, request);
+    }
+
     static #request(path, callback, request=null) {
         // TODO: IMPROVE CODE STRUCTURE
         let promise;

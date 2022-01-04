@@ -8,15 +8,17 @@ export default class GameController {
 
     #viewer;
     #gameStateController;
+    #leaderboardController;
 
     #board;
     #players;
     #currentPlayer;
     #gameFinished;
 
-    constructor(gameStateController) {
+    constructor(gameStateController, leaderboardController) {
         this.#viewer = new GameViewer();
         this.#gameStateController = gameStateController;
+        this.#leaderboardController = leaderboardController;
         this.#board = null;
         this.#players = [];
     }
@@ -219,7 +221,7 @@ export default class GameController {
         winner.getName() + " wins the game.<br><br>" + this.#players[0].getName() + ": " + this.#players[0].getScore() + " points<br>" + this.#players[1].getName() + ": " + this.#players[1].getScore() + " points",
         "Return", () => this.#gameStateController.exitGame());
 
-        // TODO: UPDATE LEADERBOARD
+        if (this.#players[0].getIsBot()) this.#leaderboardController.addGame(this.#players[1].getName(), this.#players[1] == winner);
     }
 
     #giveUp() {

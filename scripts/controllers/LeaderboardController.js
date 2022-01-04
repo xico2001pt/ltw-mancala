@@ -1,38 +1,48 @@
-import LeaderboardViewer from "../viewers/LeaderboardViewer";
+import LeaderboardViewer from "../viewers/LeaderboardViewer.js";
+import ServerController from "./ServerController.js";
 
 export default class LeaderboardController {
     #viewer;
-    #rankings;
+    #globalRankings;
+    #localRankings;
 
     constructor() {
         this.#viewer = new LeaderboardViewer();
-        this.#rankings = [];
+        this.#localRankings = [];
+        this.#viewer.initializeButton(this.#updateLeaderboards.bind(this));
     }
 
-    addVictory(nick) {
-        if (this.#getRanking(nick) == null) {
-            this.#rankings.push({"nick":nick,"victories":1,"losses":0});
+    addGame(nick, victory) {
+        let ranking = this.#getRanking(nick);
+        if (ranking == null) {
+            ranking = {"nick":nick,"victories":0,"games":0};
+            this.#localRankings.push(ranking);
         }
-        else {
-            this.#getRanking(nick).victories++;
-        }
+        ranking.games++;
+        if (victory) ranking.victories++;
     }
 
-    addLoss(nick) {
-        if (this.#getRanking(nick) == null) {
-            this.#rankings.push({"nick":nick,"victories":0,"losses":1});
-        }
-        else {
-            this.#getRanking(nick).losses++;
-        }
+    #updateLeaderboards() {
+        ServerController.ranking(this.#updateGlobalRankingsCallback.bind(this));
+        this.#viewer.displayLocalLeaderboard(this.#localRankings);
     }
 
     #getRanking(player) {
-        for (var i = 0; i < this.#rankings.length; ++i) {
-            if (this.#rankings[i].nick == player) {
-                return this.#rankings[i];
+        for (var i = 0; i < this.#localRankings.length; ++i) {
+            if (this.#localRankings[i].nick == player) {
+                return this.#localRankings[i];
             }
         }
         return null;
+    }
+
+    async #updateGlobalRankingsCallback(response) {
+        let responseJSON = await response.json();
+        if (response.status == 200) {
+            this.#globalRankings = responseJSON["ranking"];
+        } else {
+            this.#globalRankings = [];
+        }
+        this.#viewer.displayGlobalLeaderboard(this.#globalRankings);
     }
 }

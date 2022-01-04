@@ -3,7 +3,11 @@ export default class ServerController {
     static #group = 99;
 
     static ranking(callback) {
-        ServerController.request("ranking", callback);
+        let request = {
+            method: "POST",
+            body: "{}"
+        }
+        ServerController.#request("ranking", callback, request);
     }
 
     static register(nick, pass, callback) {

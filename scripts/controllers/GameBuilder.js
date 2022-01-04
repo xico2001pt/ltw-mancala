@@ -9,7 +9,6 @@ export default class GameBuilder {
     #gameStateController;
     #gameController;
     #authenticationController;
-    //#menuController;
 
     #form;
     #isSingleplayer;
@@ -34,14 +33,16 @@ export default class GameBuilder {
                 return;
             }
             let credentials = this.#authenticationController.getCredentials();
-            ServerController.join(credentials["nick"], credentials["password"], this.#form.holesPerSide.value, this.#form.seedsPerHole.value, this.#multiplayerCallback);
+            ServerController.join(credentials["nick"], credentials["password"], this.#form.holesPerSide.value, this.#form.seedsPerHole.value, this.#multiplayerCallback.bind(this));
         }
     }
 
     async #multiplayerCallback(response) {
         let responseJSON = await response.json();
         if (response.status == 200) {
-            PopUpController.instance.instantiateMessagePopUp("Matchmaking Status", "Waiting for opponent.<br>Game Id: " + responseJSON["game"], "Cancel");
+            let credentials = this.#authenticationController.getCredentials();
+            PopUpController.instance.instantiateMessagePopUp("Matchmaking Status", "Waiting for opponent.<br>Game Id: " + responseJSON["game"], "Cancel", 
+            () => ServerController.leave(credentials["nick"], credentials["password"], responseJSON["game"]));
         } else {
             let message = response["error"] + ".";
             PopUpController.instance.instantiateMessagePopUp("Matchmaking Error", message, "Return");

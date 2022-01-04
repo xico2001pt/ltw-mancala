@@ -29,3 +29,9 @@
     border-radius: 5px;
     margin-top: 20px;
 }
+
+.no-data {
+    text-align: center;
+    font-size: small;
+    font-weight: bold;
+}

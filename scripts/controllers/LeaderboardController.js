@@ -10,6 +10,7 @@ export default class LeaderboardController {
         this.#viewer = new LeaderboardViewer();
         this.#localRankings = [];
         this.#viewer.initializeButton(this.#updateLeaderboards.bind(this));
+        this.#updateLeaderboards();
     }
 
     addGame(nick, victory) {

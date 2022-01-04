@@ -2,6 +2,8 @@ import GameViewer from "../viewers/GameViewer.js"
 import Board from "../models/Board.js"
 import PopUpController from "../controllers/PopUpController.js"
 import { shuffle } from "../utils.js";
+import ServerController from "./ServerController.js";
+import AuthenticationController from "./AuthenticationController.js";
 
 export default class GameController {
     static DifficultyToDepth = [1,3,6];
@@ -9,27 +11,31 @@ export default class GameController {
     #viewer;
     #gameStateController;
     #leaderboardController;
+    #authenticationController;
 
     #board;
     #players;
     #currentPlayer;
     #gameFinished;
+    #gameId;
 
-    constructor(gameStateController, leaderboardController) {
+    constructor(gameStateController, leaderboardController, authenticationController) {
         this.#viewer = new GameViewer();
         this.#gameStateController = gameStateController;
         this.#leaderboardController = leaderboardController;
+        this.#authenticationController = authenticationController;
         this.#board = null;
         this.#players = [];
     }
 
-    startGame(config, players) {
+    startGame(config, players, gameId=null) {
         this.#board = new Board(config.holesPerSide, config.seedsPerHole);
         this.#viewer.initializeBoard(config);
         this.#players[1] = players[1];
         this.#players[0] = players[0];
         this.#currentPlayer = +config.firstPlayer;
         this.#gameFinished = false;
+        this.#gameId;
 
         this.#initializeButtons();
         this.#viewer.displayCurrentPlayer(this.#players[this.#currentPlayer].getName());
@@ -72,6 +78,8 @@ export default class GameController {
 
         this.#playVerificationOriginal(result[0], result[1]);
         this.#viewer.updateBoard(this.#board);
+        if (!this.#players[0].getIsBot())
+            ServerController.notify(this.#authenticationController.getCredentials()["nick"], this.#authenticationController.getCredentials()["pass"], this.#gameId, holeIdx);
     }
 
     #playVerification(board, lastSide, lastHole, currentPlayer) {
@@ -215,8 +223,11 @@ export default class GameController {
 
         let winnerIdx = this.#getWinner();
         let winner = this.#players[winnerIdx];
-        // let looser = this.#players[GameController.#getNextSide(winnerIdx)]; // TODO: talvez seja preciso para leaderboard
         
+        this.#endGame(winner);
+    }
+
+    #endGame(winner) {
         PopUpController.instance.instantiateMessagePopUp("Game Over", 
         winner.getName() + " wins the game.<br><br>" + this.#players[0].getName() + ": " + this.#players[0].getScore() + " points<br>" + this.#players[1].getName() + ": " + this.#players[1].getScore() + " points",
         "Return", () => this.#gameStateController.exitGame());
@@ -225,8 +236,12 @@ export default class GameController {
     }
 
     #giveUp() {
-        // TODO: GIVE UP GAME
-        this.#gameStateController.exitGame();
+        this.#players[0].setScore(this.#board.getTotalSeeds());
+        this.#players[1].setScore(0);
+        this.#endGame(this.#players[0]);
+
+        if (!this.#players[0].getIsBot())
+            ServerController.leave(this.#authenticationController.getCredentials()["nick"], this.#authenticationController.getCredentials()["pass"], this.#gameId);
     }
 
     #initializeButtons() {

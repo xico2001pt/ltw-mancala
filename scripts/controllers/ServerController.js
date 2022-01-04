@@ -26,29 +26,24 @@ export default class ServerController {
         ServerController.#request("join", callback, request);
     }
 
-    static leave(nick, pass, game, callback) {
+    static leave(nick, pass, game) {
         let request = {
             method: "POST",
-            body: JSON.stringify({"nick": nick, "pass": pass, "game": game})
+            body: JSON.stringify({"nick": nick, "password": pass, "game": game})
         }
-        ServerController.#request("leave", callback, request);
+        ServerController.#request("leave", () => {}, request);
     }
 
-    static notify(nick, pass, game, move, callback) {
+    static notify(nick, pass, game, move) {
         let request = {
             method: "POST",
-            body: JSON.stringify({"nick": nick, "pass": pass, "game": game, "move": move})
+            body: JSON.stringify({"nick": nick, "password": pass, "game": game, "move": move})
         }
-        ServerController.#request("notify", callback, request);
+        ServerController.#request("notify", () => {}, request);
     }
 
-    static #request(path, callback, request=null) {
-        // TODO: IMPROVE CODE STRUCTURE
-        let promise;
-        if (request) promise = fetch(this.#url + path, request);
-        else promise = fetch(this.#url + path);
-        
-        promise
+    static #request(path, callback, request) {
+        fetch(this.#url + path, request)
         .then(callback)
         .catch(console.log);
     }

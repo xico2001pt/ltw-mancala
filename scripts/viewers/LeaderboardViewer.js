@@ -26,9 +26,13 @@ export default class LeaderboardViewer {
     }
 
     static #displayLeaderboard(rankings, leaderboard) {
-        leaderboard.innerHTML = LeaderboardViewer.#getHeader();
-        for (let player of rankings) {
-            leaderboard.innerHTML += LeaderboardViewer.#parseRanking(player);
+        if (rankings.length == 0) {
+            leaderboard.innerHTML = '<p class="no-data">No data is available.</p>';
+        } else {
+            leaderboard.innerHTML = LeaderboardViewer.#getHeader();
+            for (let player of rankings) {
+                leaderboard.innerHTML += LeaderboardViewer.#parseRanking(player);
+            }
         }
     }
 

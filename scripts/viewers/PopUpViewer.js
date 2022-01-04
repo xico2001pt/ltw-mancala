@@ -16,6 +16,9 @@ export default class PopUpViewer {
         this.#message.innerHTML = popUp.getMessage();
         this.#button.textContent = popUp.getButtonText();
 
+        let newButton = this.#button.cloneNode(true);
+        this.#button.parentNode.replaceChild(newButton, this.#button);
+        this.#button = newButton;
         if (popUp.getCallback() != null) this.#button.addEventListener("click", popUp.getCallback());
         this.#button.addEventListener("click", () => this.close());
     }

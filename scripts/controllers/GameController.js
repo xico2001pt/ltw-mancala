@@ -3,6 +3,7 @@ import Board from "../models/Board.js"
 import PopUpController from "../controllers/PopUpController.js"
 import { shuffle } from "../utils.js";
 import ServerController from "./ServerController.js";
+import Stopwatch from "../controllers/Stopwatch.js"
 import AuthenticationController from "./AuthenticationController.js";
 
 export default class GameController {
@@ -13,6 +14,7 @@ export default class GameController {
     #leaderboardController;
     #authenticationController;
 
+    #stopwatch;
     #board;
     #players;
     #currentPlayer;
@@ -21,6 +23,8 @@ export default class GameController {
 
     constructor(gameStateController, leaderboardController, authenticationController) {
         this.#viewer = new GameViewer();
+        this.#stopwatch = new Stopwatch(5, this.#viewer.getStopwatch(), this.#timeoutLeave.bind(this));
+        this.#stopwatch.play(false);
         this.#gameStateController = gameStateController;
         this.#leaderboardController = leaderboardController;
         this.#authenticationController = authenticationController;
@@ -29,6 +33,7 @@ export default class GameController {
     }
 
     startGame(config, players, gameId=null) {
+        this.#stopwatch.reset();
         this.#board = new Board(config.holesPerSide, config.seedsPerHole);
         this.#viewer.initializeBoard(config);
         this.#players[1] = players[1];
@@ -108,10 +113,11 @@ export default class GameController {
         }
 
         if (changePlayer) this.#changePlayer();
+        this.#stopwatch.reset();
     }
 
     #changePlayer() {
-        this.#currentPlayer = GameController.#getNextSide(this.#currentPlayer)
+        this.#currentPlayer = GameController.#getNextSide(this.#currentPlayer);
         this.#viewer.displayCurrentPlayer(this.#players[this.#currentPlayer].getName());
 
         if (GameController.#isEnemyPlayer(this.#currentPlayer)) this.#opponentPlay();
@@ -123,7 +129,7 @@ export default class GameController {
         this.#playVerificationOriginal(result[0], result[1]);
         this.#viewer.updateBoard(this.#board);
 
-        if (GameController.#isEnemyPlayer(this.#currentPlayer)) this.#opponentPlay();
+        if (GameController.#isEnemyPlayer(this.#currentPlayer) && !this.#gameFinished) this.#opponentPlay();
     }
 
     #opponentPlay() {
@@ -228,6 +234,7 @@ export default class GameController {
     }
 
     #endGame(winner) {
+        this.#stopwatch.play(false);
         PopUpController.instance.instantiateMessagePopUp("Game Over", 
         winner.getName() + " wins the game.<br><br>" + this.#players[0].getName() + ": " + this.#players[0].getScore() + " points<br>" + this.#players[1].getName() + ": " + this.#players[1].getScore() + " points",
         "Return", () => this.#gameStateController.exitGame());
@@ -235,13 +242,19 @@ export default class GameController {
         if (this.#players[0].getIsBot()) this.#leaderboardController.addGame(this.#players[1].getName(), this.#players[1] == winner);
     }
 
-    #giveUp() {
-        this.#players[0].setScore(this.#board.getTotalSeeds());
-        this.#players[1].setScore(0);
-        this.#endGame(this.#players[0]);
+    #giveUp(winnerIdx) {
+        let winner = this.#players[winnerIdx];
+        let looser = this.#players[GameController.#getNextSide(winnerIdx)];
+        winner.setScore(this.#board.getTotalSeeds());
+        looser.setScore(0);
+        this.#endGame(winner);
 
         if (!this.#players[0].getIsBot())
             ServerController.leave(this.#authenticationController.getCredentials()["nick"], this.#authenticationController.getCredentials()["pass"], this.#gameId);
+    }
+
+    #timeoutLeave() {
+        this.#giveUp(GameController.#getNextSide(this.#currentPlayer));
     }
 
     #initializeButtons() {
@@ -249,7 +262,7 @@ export default class GameController {
                 this.#viewer.getHole(1, hole).onclick = (() => this.playHoleHuman(1, hole));
         }
 
-        document.getElementById("leave-game-button").addEventListener("click", () => this.#giveUp());
+        document.getElementById("leave-game-button").addEventListener("click", () => this.#giveUp(0));
     }
 
     #getWinner() {

@@ -3,6 +3,7 @@ import { instantiateDiv } from "../utils.js";
 
 export default class GameViewer {
     #currentPlayerElement;
+    #stopwatch;
     #sides;
     #storages;
 
@@ -27,6 +28,10 @@ export default class GameViewer {
 
     displayCurrentPlayer(playerName) {
         this.#currentPlayerElement.textContent = "Current Player: " + playerName;  // TODO: IT'S YOUR TURN
+    }
+
+    getStopwatch() {
+        return this.#stopwatch;
     }
 
     getHole(sideIdx, holeIdx) {
@@ -77,5 +82,6 @@ export default class GameViewer {
         this.#sides = document.getElementsByClassName("side");
 
         this.#currentPlayerElement = document.getElementById("current-player");
+        this.#stopwatch = document.getElementById("game-stopwatch");
     }
 }

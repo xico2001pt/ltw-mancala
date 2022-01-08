@@ -42,6 +42,17 @@ export default class ServerController {
         ServerController.#request("notify", () => {}, request);
     }
 
+    static update(nick, game, callback) {
+        let request = {
+            method: "GET",
+            headers: {
+                'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
+            },
+            body: `nick=${nick}&game=${game}`
+        }
+        ServerController.#request("update", () => {}, request);
+    }
+
     static #request(path, callback, request) {
         fetch(this.#url + path, request)
         .then(callback)

@@ -43,10 +43,14 @@ export default class ServerController {
     }
 
     static update(nick, game, callback) {
+        /*
         let request = {
             method: "GET"
         }
         ServerController.#request(`update?nick=${nick}&game=${game}`, () => {}, request);
+        */
+        let eventSource = new EventSource(this.#url+`update?nick=${nick}&game=${game}`);
+        eventSource.onmessage = callback;
     }
 
     static #request(path, callback, request) {

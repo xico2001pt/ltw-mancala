@@ -37,13 +37,36 @@ export default class GameBuilder {
         }
     }
 
+    multiplayerCallback(event) {
+        let data = event.data;
+        console.log(data);
+        let dataJSON = JSON.parse(data);
+        let board = dataJSON["board"];
+        console.log(data);
+        if (this.#gameStateController.isMenu()) {
+            PopUpController.instance.forceClosePopUp();
+            this.#gameStateController.startGame();
+
+            let playerNick = this.#authenticationController.getCredentials()["nick"];
+            let config = BoardConfiguration.parseMultiplayer(dataJSON, playerNick);
+            let opponentName;
+            for (let name of Object.keys(dataJSON["stores"])) if (name !== playerNick) opponentName = name;
+            let players = [new Player(opponentName, -1), new Player(playerNick , -1)];
+
+            console.log(config);
+            this.#gameController.startGame(config, players, "aaa");
+        } else {
+            this.#gameController.multiplayerCallback(event);
+        }
+    }
+
     async #multiplayerCallback(response) {
         let responseJSON = await response.json();
         if (response.status == 200) {
             let credentials = this.#authenticationController.getCredentials();
             PopUpController.instance.instantiateMessagePopUp("Matchmaking Status", "Waiting for opponent.<br>Game Id: " + responseJSON["game"], "Cancel", 
             () => ServerController.leave(credentials["nick"], credentials["password"], responseJSON["game"]));
-            ServerController.update(credentials["nick"], responseJSON["game"], null);
+            ServerController.update(credentials["nick"], responseJSON["game"], this.multiplayerCallback.bind(this));
         } else {
             let message = response["error"] + ".";
             PopUpController.instance.instantiateMessagePopUp("Matchmaking Error", message, "Return");

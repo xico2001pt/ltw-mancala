@@ -5,6 +5,7 @@ import { shuffle } from "../utils.js";
 import ServerController from "./ServerController.js";
 import Stopwatch from "../controllers/Stopwatch.js"
 import AuthenticationController from "./AuthenticationController.js";
+import BoardConfiguration from "../models/BoardConfiguration.js"
 
 export default class GameController {
     static DifficultyToDepth = [1,3,6];
@@ -20,6 +21,7 @@ export default class GameController {
     #currentPlayer;
     #gameFinished;
     #gameId;
+    #timoutID;
 
     constructor(gameStateController, leaderboardController, authenticationController) {
         this.#viewer = new GameViewer();
@@ -30,6 +32,15 @@ export default class GameController {
         this.#authenticationController = authenticationController;
         this.#board = null;
         this.#players = [];
+    }
+
+    multiplayerCallback(event) {
+        /*
+        if on menu
+            start game with given configs
+        else
+            playHole?
+        */
     }
 
     startGame(config, players, gameId=null) {
@@ -134,7 +145,7 @@ export default class GameController {
 
     #opponentPlay() {
         if (this.#players[this.#currentPlayer].getIsBot()) {
-            setTimeout(() => this.#computerPlay(), 2000);  // TODO: randomize time
+            this.#timoutID = setTimeout(() => this.#computerPlay(), 2000);  // TODO: randomize time
         }
         // if human
     }
@@ -235,6 +246,10 @@ export default class GameController {
 
     #endGame(winner) {
         this.#stopwatch.play(false);
+        if (this.#timoutID) {
+            clearTimeout(this.#timoutID);
+            this.#timoutID = undefined;
+        }
         PopUpController.instance.instantiateMessagePopUp("Game Over", 
         winner.getName() + " wins the game.<br><br>" + this.#players[0].getName() + ": " + this.#players[0].getScore() + " points<br>" + this.#players[1].getName() + ": " + this.#players[1].getScore() + " points",
         "Return", () => this.#gameStateController.exitGame());

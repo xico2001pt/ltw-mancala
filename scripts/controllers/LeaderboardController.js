@@ -8,6 +8,7 @@ export default class LeaderboardController {
 
     constructor() {
         this.#viewer = new LeaderboardViewer();
+        this.#globalRankings = [];
         this.#localRankings = [];
         this.#viewer.initializeButton(this.#updateLeaderboards.bind(this));
         this.#updateLeaderboards();

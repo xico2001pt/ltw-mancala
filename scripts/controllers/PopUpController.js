@@ -17,4 +17,8 @@ export default class PopUpController {
         this.#viewer.instantiatePopUp(new PopUp(title, message, buttonText, callback));
         this.#viewer.open();
     }
+
+    forceClosePopUp() {
+        this.#viewer.close();
+    }
 }

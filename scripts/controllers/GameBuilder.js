@@ -43,7 +43,7 @@ export default class GameBuilder {
             let credentials = this.#authenticationController.getCredentials();
             PopUpController.instance.instantiateMessagePopUp("Matchmaking Status", "Waiting for opponent.<br>Game Id: " + responseJSON["game"], "Cancel", 
             () => ServerController.leave(credentials["nick"], credentials["password"], responseJSON["game"]));
-            //ServerController.update(credentials["nick"], responseJSON["game"], null);
+            ServerController.update(credentials["nick"], responseJSON["game"], null);
         } else {
             let message = response["error"] + ".";
             PopUpController.instance.instantiateMessagePopUp("Matchmaking Error", message, "Return");

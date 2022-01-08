@@ -44,13 +44,9 @@ export default class ServerController {
 
     static update(nick, game, callback) {
         let request = {
-            method: "GET",
-            headers: {
-                'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
-            },
-            body: `nick=${nick}&game=${game}`
+            method: "GET"
         }
-        ServerController.#request("update", () => {}, request);
+        ServerController.#request(`update?nick=${nick}&game=${game}`, () => {}, request);
     }
 
     static #request(path, callback, request) {

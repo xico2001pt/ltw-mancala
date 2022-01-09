@@ -12,6 +12,7 @@ export default class GameBuilder {
 
     #form;
     #isSingleplayer;
+    #gameID;
 
     constructor(gameStateController, gameController, authenticationController) {
         this.#viewer = new GameBuilderViewer();
@@ -41,10 +42,9 @@ export default class GameBuilder {
         let data = event.data;
         console.log(data);
         let dataJSON = JSON.parse(data);
-        let board = dataJSON["board"];
-        console.log(data);
         if (this.#gameStateController.isMenu()) {
             PopUpController.instance.forceClosePopUp();
+            if ("winner" in dataJSON) return;
             this.#gameStateController.startGame();
 
             let playerNick = this.#authenticationController.getCredentials()["nick"];
@@ -54,9 +54,9 @@ export default class GameBuilder {
             let players = [new Player(opponentName, -1), new Player(playerNick , -1)];
 
             console.log(config);
-            this.#gameController.startGame(config, players, "aaa");
+            this.#gameController.startGame(config, players, this.#gameID);
         } else {
-            this.#gameController.multiplayerCallback(event);
+            this.#gameController.multiplayerCallback(dataJSON);
         }
     }
 
@@ -64,6 +64,7 @@ export default class GameBuilder {
         let responseJSON = await response.json();
         if (response.status == 200) {
             let credentials = this.#authenticationController.getCredentials();
+            this.#gameID = responseJSON["game"];
             PopUpController.instance.instantiateMessagePopUp("Matchmaking Status", "Waiting for opponent.<br>Game Id: " + responseJSON["game"], "Cancel", 
             () => ServerController.leave(credentials["nick"], credentials["password"], responseJSON["game"]));
             ServerController.update(credentials["nick"], responseJSON["game"], this.multiplayerCallback.bind(this));

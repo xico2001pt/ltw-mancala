@@ -45,7 +45,11 @@ export default class Board {
     }
 
     static parseMultiplayer(board, nick) {
-        let result = new Board(board["sides"][board["turn"]]["pits"].length, 4);  // TODO: HOW TO GET SEEDS PER HOLE?
+        console.log(board);
+        let numOfHoles = board["sides"][board["turn"]]["pits"].length;
+        let seedsPerHole = Board.#countSeedsMultiplayer(board, numOfHoles) / (2 * numOfHoles);
+
+        let result = new Board(numOfHoles, seedsPerHole);
         for (let pair of Object.entries(board["sides"])) {
             let i = (pair[0] == nick ? 1 : 0)
             for (let j = 0; j < result.getHolesPerSide(); ++j) {
@@ -54,5 +58,18 @@ export default class Board {
             result.getSide(i).getStorage().setNumOfSeeds(pair[1]["store"]);
         }
         return result;
+    }
+
+    static #countSeedsMultiplayer(board, holesPerSide) {
+        let totalSeeds = 0;
+        let i = 0;
+        for (let pair of Object.entries(board["sides"])) {
+            for (let j = 0; j < holesPerSide; ++j) {
+                totalSeeds += pair[1]["pits"][j];
+            }
+            totalSeeds += pair[1]["store"];
+            ++i;
+        }
+        return totalSeeds;
     }
 }

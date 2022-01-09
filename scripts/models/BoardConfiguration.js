@@ -9,9 +9,7 @@ export default class BoardConfiguration {
 
     static parseMultiplayer(data, nick) {
         let board = Board.parseMultiplayer(data["board"], nick);
-        console.log(board);
-        let firstPlayer = data["turn"] === nick; // TODO: NOT WORKING
-        // TODO: SEED PER HOLE WRONG
+        let firstPlayer = (data["board"]["turn"] == nick);
         return new BoardConfiguration(board.getHolesPerSide(), parseInt(board.getTotalSeeds() / (board.getHolesPerSide()*2)), firstPlayer);
     }
 }

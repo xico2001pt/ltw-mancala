@@ -13,7 +13,7 @@ function main() {
     let menuController = new MenuController(0);
     let authenticationController = new AuthenticationController();
     let leaderboardController = new LeaderboardController();
-    let gameController = new GameController(gameStateController, leaderboardController);
+    let gameController = new GameController(gameStateController, leaderboardController, authenticationController);
     let gameBuilder = new GameBuilder(gameStateController, gameController, authenticationController);
 }
 

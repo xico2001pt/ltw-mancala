@@ -50,7 +50,7 @@ export default class ServerController {
         ServerController.#request(`update?nick=${nick}&game=${game}`, () => {}, request);
         */
         let eventSource = new EventSource(this.#url+`update?nick=${nick}&game=${game}`);
-        eventSource.onmessage = callback;
+        eventSource.onmessage = callback; // TODO: CLOSE AFTER GAME ENDS
     }
 
     static #request(path, callback, request) {

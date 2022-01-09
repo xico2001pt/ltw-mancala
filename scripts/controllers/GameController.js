@@ -4,7 +4,7 @@ import PopUpController from "../controllers/PopUpController.js"
 import { shuffle } from "../utils.js";
 import ServerController from "./ServerController.js";
 import Stopwatch from "../controllers/Stopwatch.js"
-import AuthenticationController from "./AuthenticationController.js";
+import AuthenticationController from "../controllers/AuthenticationController.js";
 import BoardConfiguration from "../models/BoardConfiguration.js"
 
 export default class GameController {
@@ -25,7 +25,7 @@ export default class GameController {
 
     constructor(gameStateController, leaderboardController, authenticationController) {
         this.#viewer = new GameViewer();
-        this.#stopwatch = new Stopwatch(5, this.#viewer.getStopwatch(), this.#timeoutLeave.bind(this));
+        this.#stopwatch = new Stopwatch(100, this.#viewer.getStopwatch(), this.#timeoutLeave.bind(this));
         this.#stopwatch.play(false);
         this.#gameStateController = gameStateController;
         this.#leaderboardController = leaderboardController;
@@ -34,13 +34,30 @@ export default class GameController {
         this.#players = [];
     }
 
-    multiplayerCallback(event) {
-        /*
-        if on menu
-            start game with given configs
-        else
-            playHole?
-        */
+    multiplayerCallback(dataJSON) {
+        if ("winner" in dataJSON && !("board" in dataJSON)) {
+            if (!this.#gameFinished && dataJSON["winner"] == this.#players[1].getName())
+                this.#giveUp(1, false);
+            return;
+        }
+
+        let board = dataJSON["board"];
+        let nick = this.#authenticationController.getCredentials()["nick"];
+        let turn = board["turn"];
+        
+        this.#board = Board.parseMultiplayer(board, nick);
+
+        let endgameSide = this.#isGameOver(this.#board);
+        console.log("end: ", endgameSide);
+        if (endgameSide != null) {
+            this.#gameOver(endgameSide);
+            return;
+        }
+
+        if (this.#currentPlayer == 1) return;
+
+        this.#viewer.updateBoard(this.#board);
+        if (turn == nick) this.#changePlayer();
     }
 
     startGame(config, players, gameId=null) {
@@ -51,7 +68,7 @@ export default class GameController {
         this.#players[0] = players[0];
         this.#currentPlayer = +config.firstPlayer;
         this.#gameFinished = false;
-        this.#gameId;
+        this.#gameId = gameId;
 
         this.#initializeButtons();
         this.#viewer.displayCurrentPlayer(this.#players[this.#currentPlayer].getName());
@@ -95,7 +112,7 @@ export default class GameController {
         this.#playVerificationOriginal(result[0], result[1]);
         this.#viewer.updateBoard(this.#board);
         if (!this.#players[0].getIsBot())
-            ServerController.notify(this.#authenticationController.getCredentials()["nick"], this.#authenticationController.getCredentials()["pass"], this.#gameId, holeIdx);
+            ServerController.notify(this.#authenticationController.getCredentials()["nick"], this.#authenticationController.getCredentials()["password"], this.#gameId, holeIdx);
     }
 
     #playVerification(board, lastSide, lastHole, currentPlayer) {
@@ -118,6 +135,7 @@ export default class GameController {
         let changePlayer = this.#playVerification(this.#board, lastSide, lastHole, this.#currentPlayer);
 
         let endgameSide = this.#isGameOver(this.#board);
+        console.log("FIM AQUI: ", endgameSide);
         if (endgameSide != null) {
             this.#gameOver(endgameSide);
             return;
@@ -134,8 +152,7 @@ export default class GameController {
         if (GameController.#isEnemyPlayer(this.#currentPlayer)) this.#opponentPlay();
     }
 
-    #computerPlay() {
-        let hole = this.#minimax(this.#board, GameController.DifficultyToDepth[this.#players[this.#currentPlayer].getDifficulty()], true)[1];
+    #computerPlay(hole) {
         let result = this.#playHole(this.#board, 0, hole);
         this.#playVerificationOriginal(result[0], result[1]);
         this.#viewer.updateBoard(this.#board);
@@ -145,9 +162,9 @@ export default class GameController {
 
     #opponentPlay() {
         if (this.#players[this.#currentPlayer].getIsBot()) {
-            this.#timoutID = setTimeout(() => this.#computerPlay(), 2000);  // TODO: randomize time
+            this.#timoutID = setTimeout(() => this.#computerPlay(this.#minimax(this.#board, 
+                GameController.DifficultyToDepth[this.#players[this.#currentPlayer].getDifficulty()], true)[1]), 2000);  // TODO: randomize time
         }
-        // if human
     }
 
     #minimax(board, depth, maximize) {
@@ -257,15 +274,15 @@ export default class GameController {
         if (this.#players[0].getIsBot()) this.#leaderboardController.addGame(this.#players[1].getName(), this.#players[1] == winner);
     }
 
-    #giveUp(winnerIdx) {
+    #giveUp(winnerIdx, ack=true) {
         let winner = this.#players[winnerIdx];
         let looser = this.#players[GameController.#getNextSide(winnerIdx)];
         winner.setScore(this.#board.getTotalSeeds());
         looser.setScore(0);
         this.#endGame(winner);
 
-        if (!this.#players[0].getIsBot())
-            ServerController.leave(this.#authenticationController.getCredentials()["nick"], this.#authenticationController.getCredentials()["pass"], this.#gameId);
+        if (!this.#players[0].getIsBot() && ack)
+            ServerController.leave(this.#authenticationController.getCredentials()["nick"], this.#authenticationController.getCredentials()["password"], this.#gameId);
     }
 
     #timeoutLeave() {

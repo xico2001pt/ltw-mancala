@@ -1,7 +1,7 @@
 import GameViewer from "../viewers/GameViewer.js"
 import Board from "../models/Board.js"
 import PopUpController from "../controllers/PopUpController.js"
-import { shuffle } from "../utils.js";
+import { randomInt, shuffle } from "../utils.js";
 import ServerController from "./ServerController.js";
 import Stopwatch from "../controllers/Stopwatch.js"
 import AuthenticationController from "../controllers/AuthenticationController.js";
@@ -48,7 +48,6 @@ export default class GameController {
         this.#board = Board.parseMultiplayer(board, nick);
 
         let endgameSide = this.#isGameOver(this.#board);
-        console.log("end: ", endgameSide);
         if (endgameSide != null) {
             this.#gameOver(endgameSide);
             return;
@@ -58,6 +57,7 @@ export default class GameController {
 
         this.#viewer.updateBoard(this.#board);
         if (turn == nick) this.#changePlayer();
+        this.#stopwatch.reset();
     }
 
     startGame(config, players, gameId=null) {
@@ -116,9 +116,9 @@ export default class GameController {
     }
 
     #playVerification(board, lastSide, lastHole, currentPlayer) {
-        if (lastSide == currentPlayer) {  // Se o ultimo buraco é do lado do jogador
-            if (lastHole == board.getHolesPerSide()) return false;  // Se o ultimo buraco é um armazem
-            else if (board.getSide(lastSide).getHole(lastHole).getNumOfSeeds() == 1) {  // Se o ultimo buraco está vazio (== 1, pois a verificação é feita depois da jogada)
+        if (lastSide == currentPlayer) {  // If last hole is on player's side
+            if (lastHole == board.getHolesPerSide()) return false;  // If last hole is storage
+            else if (board.getSide(lastSide).getHole(lastHole).getNumOfSeeds() == 1) {  // If last hole is empty (== 1, verification is done after the move)
                 let enemyHole = board.getSide(GameController.#getNextSide(lastSide)).getHole(board.getHolesPerSide() - lastHole - 1);
                 if (enemyHole.getNumOfSeeds() > 0) {  // Enemy hole isn't empty
                     let seeds = enemyHole.getNumOfSeeds();
@@ -135,7 +135,6 @@ export default class GameController {
         let changePlayer = this.#playVerification(this.#board, lastSide, lastHole, this.#currentPlayer);
 
         let endgameSide = this.#isGameOver(this.#board);
-        console.log("FIM AQUI: ", endgameSide);
         if (endgameSide != null) {
             this.#gameOver(endgameSide);
             return;
@@ -163,7 +162,7 @@ export default class GameController {
     #opponentPlay() {
         if (this.#players[this.#currentPlayer].getIsBot()) {
             this.#timoutID = setTimeout(() => this.#computerPlay(this.#minimax(this.#board, 
-                GameController.DifficultyToDepth[this.#players[this.#currentPlayer].getDifficulty()], true)[1]), 2000);  // TODO: randomize time
+                GameController.DifficultyToDepth[this.#players[this.#currentPlayer].getDifficulty()], true)[1]), randomInt(1000,5000)); 
         }
     }
 
@@ -256,8 +255,7 @@ export default class GameController {
         this.#players[1].setScore(this.#board.getSide(1).getStorage().getNumOfSeeds());
 
         let winnerIdx = this.#getWinner();
-        let winner = this.#players[winnerIdx];
-        
+        let winner = winnerIdx != null ? this.#players[winnerIdx] : null;
         this.#endGame(winner);
     }
 
@@ -267,11 +265,13 @@ export default class GameController {
             clearTimeout(this.#timoutID);
             this.#timoutID = undefined;
         }
+        let winnerMessage = winner == null ? "The game ended in a draw. You are both losers :\\" : winner.getName() + " wins the game.";
         PopUpController.instance.instantiateMessagePopUp("Game Over", 
-        winner.getName() + " wins the game.<br><br>" + this.#players[0].getName() + ": " + this.#players[0].getScore() + " points<br>" + this.#players[1].getName() + ": " + this.#players[1].getScore() + " points",
+        winnerMessage + "<br><br>" + this.#players[0].getName() + ": " + this.#players[0].getScore() + " points<br>" + this.#players[1].getName() + ": " + this.#players[1].getScore() + " points",
         "Return", () => this.#gameStateController.exitGame());
 
         if (this.#players[0].getIsBot()) this.#leaderboardController.addGame(this.#players[1].getName(), this.#players[1] == winner);
+        else ServerController.closeEventSource();
     }
 
     #giveUp(winnerIdx, ack=true) {
@@ -298,11 +298,11 @@ export default class GameController {
     }
 
     #getWinner() {
-        // TODO: CHECK DRAW
         let player1score = this.#players[0].getScore();
         let player2score = this.#players[1].getScore();
         if (player1score > player2score) return 0;
-        else return 1;
+        else if (player1score < player2score) return 1;
+        else null;
     }
 
     static #getNextSide(side) {

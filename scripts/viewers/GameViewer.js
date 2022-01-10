@@ -27,7 +27,7 @@ export default class GameViewer {
     }
 
     displayCurrentPlayer(playerName) {
-        this.#currentPlayerElement.textContent = "Current Player: " + playerName;  // TODO: IT'S YOUR TURN
+        this.#currentPlayerElement.textContent = "Current Player: " + playerName; 
     }
 
     getStopwatch() {
@@ -67,9 +67,9 @@ export default class GameViewer {
     }
 
     #generateSeed(hole) {
-        // generate x
-        // generate y
-        // generate rot
+        // TODO: generate x
+        // TODO: generate y
+        // TODO: generate rot
         this.#placeSeed(hole);
     }
 

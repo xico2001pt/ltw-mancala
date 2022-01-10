@@ -1,6 +1,7 @@
 export default class ServerController {
     static #url = "http://twserver.alunos.dcc.fc.up.pt:8008/";
     static #group = 99;
+    static #eventSource;
 
     static ranking(callback) {
         let request = {
@@ -43,14 +44,15 @@ export default class ServerController {
     }
 
     static update(nick, game, callback) {
-        /*
-        let request = {
-            method: "GET"
+        ServerController.#eventSource = new EventSource(this.#url+`update?nick=${nick}&game=${game}`);
+        ServerController.#eventSource.onmessage = callback;
+    }
+
+    static closeEventSource() {
+        if (ServerController.#eventSource) {
+            ServerController.#eventSource.close();
+            ServerController.#eventSource = undefined;
         }
-        ServerController.#request(`update?nick=${nick}&game=${game}`, () => {}, request);
-        */
-        let eventSource = new EventSource(this.#url+`update?nick=${nick}&game=${game}`);
-        eventSource.onmessage = callback; // TODO: CLOSE AFTER GAME ENDS
     }
 
     static #request(path, callback, request) {

@@ -11,6 +11,8 @@
     background-color: rgb(199, 148, 24);
     text-align: center;
     vertical-align: middle;
+    border-radius: 5px;
+    font-size: larger;
 }
 
 #instructions-content ul {

@@ -1,6 +1,10 @@
 #game-header {
+    z-index: 1;
     width: 100%;
-    height: 10vh;
+    display: flex;
+    justify-content: space-between;
+    background-color: rgb(57, 62, 70);
+    box-shadow: -3px 0px 10px rgba(0, 0, 0, 0.6);
 }
 
 #leave-game-button {
@@ -11,4 +15,14 @@
 #game-header p {
     text-align: center;
     margin: 0px;
+    vertical-align: middle;
+}
+
+#scoreboard p {
+    text-align: right;
+}
+
+.padding-header {
+    padding: 15px;
+    box-sizing: border-box;
 }

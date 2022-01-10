@@ -15,3 +15,10 @@ nav {
     margin: auto;
     padding: 10px;
 }
+
+.game-title {
+    margin: 5px;
+    font-weight: bold;
+    font-size: larger;
+    text-align: center;
+}

@@ -3,6 +3,7 @@ import { instantiateDiv } from "../utils.js";
 
 export default class GameViewer {
     #currentPlayerElement;
+    #scoreboard;
     #stopwatch;
     #sides;
     #storages;
@@ -30,6 +31,10 @@ export default class GameViewer {
         this.#currentPlayerElement.textContent = "Current Player: " + playerName; 
     }
 
+    displayCurrentScore(board, players) {
+        this.#scoreboard.innerHTML = `<p>${players[1].getName()}: ${board.getSide(1).getStorage().getNumOfSeeds()} points</p><p>${players[0].getName()}: ${board.getSide(0).getStorage().getNumOfSeeds()} points</p>`;
+    }
+
     getStopwatch() {
         return this.#stopwatch;
     }
@@ -37,6 +42,11 @@ export default class GameViewer {
     getHole(sideIdx, holeIdx) {
         let holes = this.#sides[sideIdx].childNodes;
         return holes[sideIdx == 0 ? holes.length - holeIdx - 1 : holeIdx];
+    }
+
+    updateGame(board, players) {
+        this.updateBoard(board);
+        this.displayCurrentScore(board, players);
     }
 
     updateBoard(board) {
@@ -83,5 +93,6 @@ export default class GameViewer {
 
         this.#currentPlayerElement = document.getElementById("current-player");
         this.#stopwatch = document.getElementById("game-stopwatch");
+        this.#scoreboard = document.getElementById("scoreboard");
     }
 }

@@ -2,6 +2,7 @@ import LeaderboardViewer from "../viewers/LeaderboardViewer.js";
 import ServerController from "./ServerController.js";
 
 export default class LeaderboardController {
+    static #storageName = "leaderboard";
     #viewer;
     #globalRankings;
     #localRankings;
@@ -9,9 +10,10 @@ export default class LeaderboardController {
     constructor() {
         this.#viewer = new LeaderboardViewer();
         this.#globalRankings = [];
-        this.#localRankings = [];
+        this.#localRankings = this.#loadLocalLeaderboard();
         this.#viewer.initializeButton(this.#updateLeaderboards.bind(this));
         this.#updateLeaderboards();
+        this.#viewer.displayGlobalLeaderboard(this.#globalRankings);
     }
 
     addGame(nick, victory) {
@@ -22,6 +24,7 @@ export default class LeaderboardController {
         }
         ranking.games++;
         if (victory) ranking.victories++;
+        this.#saveLocalLeaderboard();
     }
 
     #updateLeaderboards() {
@@ -46,5 +49,20 @@ export default class LeaderboardController {
             this.#globalRankings = [];
         }
         this.#viewer.displayGlobalLeaderboard(this.#globalRankings);
+    }
+
+    #loadLocalLeaderboard() {
+        let result = undefined;
+        if (typeof(Storage) !== "undefined") {
+            result = localStorage.getItem(LeaderboardController.#storageName);
+        }
+        return result ? JSON.parse(result) : [];
+    }
+
+    #saveLocalLeaderboard() {
+        let result = undefined;
+        if (typeof(Storage) !== "undefined") {
+            result = localStorage.setItem(LeaderboardController.#storageName, JSON.stringify(this.#localRankings));
+        }
     }
 }

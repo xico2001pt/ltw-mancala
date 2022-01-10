@@ -19,12 +19,14 @@
         <link rel="stylesheet" href="styles/pop-up.css">
 
         <script type="module" src="scripts/mancala.js"></script>
-        <title>The Rise of LTW (Mancala Edition) ™️</title>
+        <title>The Rise of LTW ™️ (Mancala Edition)</title>
     </head>
     <body>
         <nav>
             <div id="navigation-logo">
                 <img src="assets/mancala-logo.png" alt="Mancala Logo">
+                <p class="game-title">The Rise of LTW ™️</p>
+                <p class="game-title">(Mancala Edition)</p>
             </div>
             
             <div id="navigation-menus">
@@ -141,10 +143,13 @@
                 </div>
             </div>
             <div id="game-content">
-                <div id="game-header">
-                    <p id="leave-game-button">Leave Game</p>
-                    <p id="current-player">Current Player: $Username$</p>
-                    <p id="game-stopwatch"></p>
+                <div id="game-header" class="padding-header">
+                    <p id="leave-game-button">Give up</p>
+                    <div>
+                        <p id="current-player">Current Player: $Username$</p>
+                        <p id="game-stopwatch"></p>
+                    </div>
+                    <div id="scoreboard"></div>
                 </div>
                 <div id="game-wrapper">
                     <div id="game-board">

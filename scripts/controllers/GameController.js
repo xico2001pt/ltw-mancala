@@ -55,7 +55,7 @@ export default class GameController {
 
         if (this.#currentPlayer == 1) return;
 
-        this.#viewer.updateBoard(this.#board);
+        this.#viewer.updateGame(this.#board, this.#players);
         if (turn == nick) this.#changePlayer();
         this.#stopwatch.reset();
     }
@@ -72,6 +72,7 @@ export default class GameController {
 
         this.#initializeButtons();
         this.#viewer.displayCurrentPlayer(this.#players[this.#currentPlayer].getName());
+        this.#viewer.displayCurrentScore(this.#board, this.#players);
 
         if (GameController.#isEnemyPlayer(this.#currentPlayer)) this.#opponentPlay();
     }
@@ -110,7 +111,7 @@ export default class GameController {
         if (result == null) return;
 
         this.#playVerificationOriginal(result[0], result[1]);
-        this.#viewer.updateBoard(this.#board);
+        this.#viewer.updateGame(this.#board, this.#players);
         if (!this.#players[0].getIsBot())
             ServerController.notify(this.#authenticationController.getCredentials()["nick"], this.#authenticationController.getCredentials()["password"], this.#gameId, holeIdx);
     }
@@ -154,7 +155,7 @@ export default class GameController {
     #computerPlay(hole) {
         let result = this.#playHole(this.#board, 0, hole);
         this.#playVerificationOriginal(result[0], result[1]);
-        this.#viewer.updateBoard(this.#board);
+        this.#viewer.updateGame(this.#board, this.#players);
 
         if (GameController.#isEnemyPlayer(this.#currentPlayer) && !this.#gameFinished) this.#opponentPlay();
     }

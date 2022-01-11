@@ -1,5 +1,5 @@
 import Board from "../models/Board.js"
-import { instantiateDiv } from "../utils.js";
+import { instantiateDiv, randomInt } from "../utils.js";
 
 export default class GameViewer {
     #currentPlayerElement;
@@ -31,8 +31,16 @@ export default class GameViewer {
         this.#currentPlayerElement.textContent = "Current Player: " + playerName; 
     }
 
-    displayCurrentScore(board, players) {
-        this.#scoreboard.innerHTML = `<p>${players[1].getName()}: ${board.getSide(1).getStorage().getNumOfSeeds()} points</p><p>${players[0].getName()}: ${board.getSide(0).getStorage().getNumOfSeeds()} points</p>`;
+    displayCurrentScore(board, players, usePlayers=false) {
+        let scores = [];
+        if (usePlayers) {
+            scores[0] = players[0].getScore();
+            scores[1] = players[1].getScore();
+        } else {
+            scores[0] = board.getSide(0).getStorage().getNumOfSeeds();
+            scores[1] = board.getSide(1).getStorage().getNumOfSeeds();
+        }
+        this.#scoreboard.innerHTML = `<p>${players[1].getName()}: ${scores[1]} points</p><p>${players[0].getName()}: ${scores[0]} points</p>`;
     }
 
     getStopwatch() {
@@ -74,13 +82,19 @@ export default class GameViewer {
         let div = document.createElement("div");
         div.classList.add("seed");
         hole.appendChild(div);
+        return div;
     }
 
     #generateSeed(hole) {
-        // TODO: generate x
-        // TODO: generate y
-        // TODO: generate rot
-        this.#placeSeed(hole);
+        let seed = this.#placeSeed(hole);
+
+        let x = `${randomInt(10, 60)}%`;
+        let y = `${randomInt(10, 80)}%`;
+        let rot = `${randomInt(0, 180)}deg`
+
+        seed.style.left = x;
+        seed.style.top = y;
+        seed.style.transform = `rotate(${rot})`;
     }
 
     #initializeElements() {

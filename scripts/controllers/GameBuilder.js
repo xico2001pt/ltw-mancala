@@ -44,7 +44,10 @@ export default class GameBuilder {
         let dataJSON = JSON.parse(data);
         if (this.#gameStateController.isMenu()) {
             PopUpController.instance.forceClosePopUp();
-            if ("winner" in dataJSON) return;
+            if ("winner" in dataJSON) {
+                ServerController.closeEventSource();
+                return;
+            }
             this.#gameStateController.startGame();
 
             let playerNick = this.#authenticationController.getCredentials()["nick"];

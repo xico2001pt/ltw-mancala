@@ -30,6 +30,7 @@
     border-radius: 4vw;
     padding: 1vw;
     box-sizing: border-box;
+    position: relative;
 }
 
 .selectable-hole:hover {
@@ -46,7 +47,7 @@
     background-image: linear-gradient(rgb(199, 148, 24), rgb(236, 203, 119), rgb(199, 148, 24));
     height: 2vh;
     width: 2vw;
-    margin: 5px;
     border-radius: 50%;
-    align-self: center;
+    position: absolute;
+    transform-origin: center;
 }

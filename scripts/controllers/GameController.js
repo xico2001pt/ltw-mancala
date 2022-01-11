@@ -280,6 +280,7 @@ export default class GameController {
         let looser = this.#players[GameController.#getNextSide(winnerIdx)];
         winner.setScore(this.#board.getTotalSeeds());
         looser.setScore(0);
+        this.#viewer.displayCurrentScore(this.#board, this.#players, true);
         this.#endGame(winner);
 
         if (!this.#players[0].getIsBot() && ack)

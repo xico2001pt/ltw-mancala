@@ -4,36 +4,65 @@ const http = require('http');
 const url = require('url');
 const stream = require('stream');
 const fs = require('fs');
-const WebSocketServer = require('websocket').server;
 
-const config = require('./config.js')
+const config = require('./config.js');
 const authentication = require('./authentication.js');
+const mancala = require('./mancala.js');
 
-function serverHandler(request, response, message) {
+function serverHandlerPost(request, response, message) {
     const parsedUrl = url.parse(request.url, true);
     const pathname = parsedUrl.pathname;
-    response.end(message);
 
     switch(pathname) {
     case '/register':
-        authentication.register(request, response);
+        authentication.register(request, response, message);
+        break;
+    case '/ranking':
+        break;
+    case '/join':
+        break;
+    case '/leave':
+        break;
+    case '/notify':
         break;
     default:
-        // desconhecido 404
+        response.writeHead(404, {'Content-Type': 'application/javascript'});
+        response.write('{"error":"unknown POST request"}');
     }
     response.end("\n");
 }
 
 function main(request, response) {
+    if (request.method == 'GET') {
+
+    } else if (request.method == 'POST') {
+        let body = '';
+        request.on('data', function (data) {
+            body += data;
+
+            // Too much POST data (1MB), kill the connection!
+            if (body.length > 1e6) request.connection.destroy();
+        });
+
+        request.on('end', function () {
+            let message;
+            try {
+                console.log("body:", body);
+                message = JSON.parse(body);
+            } catch {
+                response.writeHeader(400, {'Content-Type': 'application/javascript'});
+                response.write('{"error":"Error parsing JSON request: SyntaxError: Unexpected end of JSON input"}');
+                response.end();
+                return;
+            }
+            serverHandlerPost(request, response, message);
+        });
+        // TODO: ON ERROR
+    } else {
+        // TODO: 404 '{"error":"unknown request.method request"}'
+    }
 }
 
-const server = http.createServer(() => {});
+const server = http.createServer(main);
 
-const httpServer = server.listen(9999);
-const webSocketServer = new WebSocketServer({ httpServer });
-webSocketServer.on('request', function(req) {
-    const connection = req.accept(null, request.origin);
-    remember(connection);
-    connection.on('message', (message) => serverHandler(request, response, message));
-    connection.on('close', function(connection) { forget(connection);});
-});
+server.listen(9999);

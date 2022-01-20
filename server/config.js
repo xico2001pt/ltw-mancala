@@ -1,6 +1,6 @@
 module.exports.documentRoot = '/home/zp/public_html/about';
 //module.exports.defaultIndex = 'index.html';
-module.exports.port = 8007;
+module.exports.port = 9087;
 module.exports.mediaTypes = {
     'txt':      'text/plain',
     'html':     'text/html',
@@ -10,4 +10,5 @@ module.exports.mediaTypes = {
     'jpeg':     'image/jpeg',
     'jpg':      'image/jpeg',
 }
-module.exports.usersFilepath = 'database/user.data';
+module.exports.usersFilepath = './server/database/users.data';
+module.exports.leaderboardFilepath = './server/database/leaderboard.data';

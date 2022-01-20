@@ -4,27 +4,31 @@
     vertical-align: middle;
 }
 
-#gamemode-buttons {
+.main-button-container {
     display: flex;
 }
 
-#singleplayer-button {
+.left-button {
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
 }
 
-#multiplayer-button {
+.right-button {
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
 }
 
-.gamemode-button {
+.main-button {
     font-weight: bold;
     font-size: medium;
     width: 50%;
     height: 40px;
     padding: 0px;
     border: 0px;
+}
+
+#server-buttons {
+    margin-bottom: 30px;
 }
 
 #play-content table {

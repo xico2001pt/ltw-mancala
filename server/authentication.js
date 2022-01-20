@@ -29,36 +29,30 @@ function addUser(nick, password) {
 }
 
 module.exports.register = function(request, response, message) {
-    let header = {'Content-Type': 'application/javascript'};
     let status, body;
-    if (request.method != 'POST') {
+    if (!('nick' in message)) {
         status = 400;
-        body = '{"error":"unknown GET request"}';
+        body = '{"error":"nick is undefined"}';
+    } else if (!('password' in message)) {
+        status = 400;
+        body = '{"error":"password is undefined"}';
     } else {
-        if (!('nick' in message)) {
-            status = 400;
-            body = '{"error":"nick is undefined"}';
-        } else if (!('password' in message)) {
-            status = 400;
-            body = '{"error":"password is undefined"}';
-        } else {
-            if (hasUser(message["nick"])) {
-                if (validateUser(message["nick"], message["password"])) {
-                    status = 200;
-                    body = '{}';
-                }
-                else {
-                    status = 400;
-                    body = '{"error":"User registered with a different password"}';
-                }
-            } else {
-                addUser(message["nick"], message["password"]);
+        if (hasUser(message["nick"])) {
+            if (validateUser(message["nick"], message["password"])) {
                 status = 200;
                 body = '{}';
             }
+            else {
+                status = 400;
+                body = '{"error":"User registered with a different password"}';
+            }
+        } else {
+            addUser(message["nick"], message["password"]);
+            status = 200;
+            body = '{}';
         }
     }
-    response.writeHead(status, header);
+    response.writeHead(status);
     response.write(body);
 }
 

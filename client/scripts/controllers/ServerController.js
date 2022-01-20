@@ -1,6 +1,7 @@
 export default class ServerController {
-    static #url = "http://twserver.alunos.dcc.fc.up.pt:8008/";
-    static #group = 99;
+    static #servers = ["http://twserver.alunos.dcc.fc.up.pt:8008/", "127.0.0.1:9087/"];
+    static #url = ServerController.#servers[0];
+    static #group = 87;
     static #eventSource;
 
     static ranking(callback) {
@@ -44,7 +45,7 @@ export default class ServerController {
     }
 
     static update(nick, game, callback) {
-        ServerController.#eventSource = new EventSource(this.#url+`update?nick=${nick}&game=${game}`);
+        ServerController.#eventSource = new EventSource(ServerController.#url+`update?nick=${nick}&game=${game}`);
         ServerController.#eventSource.onmessage = callback;
     }
 
@@ -55,8 +56,13 @@ export default class ServerController {
         }
     }
 
+    static changeServer(isGlobal) {
+        ServerController.#url = isGlobal ? ServerController.#servers[0] : ServerController.#servers[1];
+    }
+
     static #request(path, callback, request) {
-        fetch(this.#url + path, request)
+        console.log(ServerController.#url + path);
+        fetch(ServerController.#url + path, request)
         .then(callback)
         .catch(console.log);
     }

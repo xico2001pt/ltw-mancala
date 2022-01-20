@@ -87,6 +87,16 @@ export default class GameBuilder {
         this.#gameStateController.startGame();
     }
 
+    #changeServer(isGlobal) {
+        if (this.#authenticationController.isLoggedIn()) {
+            PopUpController.instance.instantiateMessagePopUp("Permission Denied", "You need to log out in order to change the current server.", "Return");
+            return;
+        }
+
+        ServerController.changeServer(isGlobal);
+        this.#viewer.changeServer(isGlobal);
+    }
+
     #changeMode(isSingleplayer) {
         if (!isSingleplayer && !this.#assertAuthentication()) return;
 
@@ -107,6 +117,10 @@ export default class GameBuilder {
 
 
         document.getElementById("start-game-button").addEventListener("click", () => this.setUpGame());
+
+        this.#viewer.getGlobalButton().addEventListener("click", () => this.#changeServer(true));
+        this.#viewer.getGroupButton().addEventListener("click", () => this.#changeServer(false));
+
         this.#viewer.getSingleplayerButton().addEventListener("click", () => this.#changeMode(true));
         this.#viewer.getMultiplayerButton().addEventListener("click", () => this.#changeMode(false));
     }

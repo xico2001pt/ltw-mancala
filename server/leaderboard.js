@@ -38,7 +38,9 @@ module.exports.addGame = function(nick, victory) {
 module.exports.ranking = function(request, response, message) {
     let status, body;
     status = 200;
-    body = {"ranking":leaderboard.slice(0,10)};
+    body = JSON.stringify({"ranking":leaderboard.slice(0,10)});
     response.writeHead(status);
     response.write(body);
 }
+
+loadLeaderboard();

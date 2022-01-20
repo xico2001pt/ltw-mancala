@@ -1,5 +1,5 @@
 export default class ServerController {
-    static #servers = ["http://twserver.alunos.dcc.fc.up.pt:8008/", "127.0.0.1:9087/"];
+    static #servers = ["http://twserver.alunos.dcc.fc.up.pt:8008/", "http://127.0.0.1:9087/"];
     static #url = ServerController.#servers[0];
     static #group = 87;
     static #eventSource;
@@ -61,7 +61,6 @@ export default class ServerController {
     }
 
     static #request(path, callback, request) {
-        console.log(ServerController.#url + path);
         fetch(ServerController.#url + path, request)
         .then(callback)
         .catch(console.log);

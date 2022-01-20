@@ -1,7 +1,32 @@
+let queue = [];
+let games = [];
+
 /*
-    fila de espera ["iir89idn3"]
-    obj com jogos atuais {"a5f282": obj parte 2}
-    funções de logica de jogo
+    /*
+        {
+        "board":
+        {
+            "turn":"x234567",
+            "sides":
+            {
+                "x234567":
+                {
+                    "store":0,
+                    "pits":[4,4,4,4,4]
+                },
+                "x23456":
+                {
+                    "store":0,
+                    "pits":[4,4,4,4,4]
+                }
+            }
+        }
+        ,"stores":
+        {
+            "x234567":0,
+            "x23456":0
+        }
+        }
 
     protocolos:
     VALIDAR SEMPRE PEDIDO

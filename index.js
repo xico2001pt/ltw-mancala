@@ -7,12 +7,14 @@ const fs = require('fs');
 
 const config = require('./server/config.js');
 const authentication = require('./server/authentication.js');
+const leaderboard = require('./server/leaderboard.js');
 const mancala = require('./server/mancala.js');
 
 const headers = {
     'Content-Type': 'application/javascript',
     'Cache-Control': 'no-cache',
-    'Access-Control-Allow-Origin': '*'
+    'Access-Control-Allow-Origin': '*',
+    'Connection': 'keep-alive'
 }
 
 function writeHeaders(response) {
@@ -30,6 +32,7 @@ function serverHandlerPost(request, response, message) {
         authentication.register(request, response, message);
         break;
     case '/ranking':
+        leaderboard.ranking(request, response, message);
         break;
     case '/join':
         break;
@@ -41,7 +44,7 @@ function serverHandlerPost(request, response, message) {
         response.writeHead(404);
         response.write('{"error":"unknown POST request"}');
     }
-    response.end("\n");
+    response.end();
 }
 
 function postHandler(request, response) {
@@ -73,7 +76,6 @@ function postHandler(request, response) {
 }
 
 function main(request, response) {
-    console.log("hey");
     writeHeaders(response);
     if (request.method == 'GET') {
 

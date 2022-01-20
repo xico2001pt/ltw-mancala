@@ -19,6 +19,8 @@ function validateUser(nick, password) {
     return users[nick] == password;
 }
 
+module.exports.validateUser = validateUser;
+
 function hasUser(nick) {
     return nick in users;
 }

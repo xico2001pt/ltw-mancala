@@ -5,9 +5,9 @@ const url = require('url');
 const stream = require('stream');
 const fs = require('fs');
 
-const config = require('./config.js');
-const authentication = require('./authentication.js');
-const mancala = require('./mancala.js');
+const config = require('./server/config.js');
+const authentication = require('./server/authentication.js');
+const mancala = require('./server/mancala.js');
 
 function serverHandlerPost(request, response, message) {
     const parsedUrl = url.parse(request.url, true);
@@ -40,8 +40,8 @@ function main(request, response) {
         request.on('data', function (data) {
             body += data;
 
-            // Too much POST data (1MB), kill the connection!
-            if (body.length > 1e6) request.connection.destroy();
+            // Too much POST data (1KB), kill the connection!
+            if (body.length > 1e3) request.connection.destroy();
         });
 
         request.on('end', function () {

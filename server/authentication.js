@@ -4,7 +4,7 @@ const config = require('./config.js');
 let users = {};  // nick: password
 
 function loadUsers() {
-    fs.readFile(config.usersFilename, function(err, data) {
+    fs.readFile(config.usersFilepath, function(err, data) {
         if (!err) {
             users = JSON.parse(data.toString());
         }
@@ -12,7 +12,7 @@ function loadUsers() {
 }
 
 function saveUsers() {
-    fs.writeFile(config.usersFilename, JSON.stringify(users), function(err) {});
+    fs.writeFile(config.usersFilepath, JSON.stringify(users), function(err) {});
 }
 
 function validateUser(nick, password) {

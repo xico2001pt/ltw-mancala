@@ -10,4 +10,4 @@ module.exports.mediaTypes = {
     'jpeg':     'image/jpeg',
     'jpg':      'image/jpeg',
 }
-module.exports.usersFilename = 'user.data';
+module.exports.usersFilepath = 'database/user.data';

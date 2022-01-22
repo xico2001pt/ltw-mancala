@@ -35,10 +35,13 @@ function serverHandlerPost(request, response, message) {
         leaderboard.ranking(request, response, message);
         break;
     case '/join':
+        mancala.join(request, response, message);
         break;
     case '/leave':
+        mancala.leave(request, response, message);
         break;
     case '/notify':
+        mancala.notify(request, response, message);
         break;
     default:
         response.writeHead(404);

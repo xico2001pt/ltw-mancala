@@ -1,7 +1,8 @@
 const authentication = require('./authentication.js');
 const gameLogic = require('./game_logic.js');
+const crypto = require('crypto');
 
-let queue = {}; // Each element is [size, initial, player]
+let queue = {};  // queue[gameId] => [size, initial, player]
 let games = {};
 
 /*
@@ -31,37 +32,19 @@ let games = {};
         }
         }
 
-    protocolos:
-    VALIDAR SEMPRE PEDIDO
-    
-    leave:
-    1º - se o id estiver na fila, removemos dos jogos atuais e depois da fila
-    2º - se estiver nos atuais
-          - chamar UPDATE com winner = adversario
-          - remover dos jogos
-          - cancelar timer
-          - add leaderboard
-    
-    notify:
-    1º - atualizar o games[id]
-    2º - mandar UPDATE
-
     update:
     1º - initUpdate(gameId) : Inicializa EventSource para o jogo
     2º - playUpdate(gameId) : manda o board, stores, .... Se o board fôr final, tmb manda winner
     3º - leaveUpdate(gameId, winner) : manda winner por desistência
 */
 
-/*
-    join:
-    1º - gerar id
-    2º - add id à fila de espera
-    3º - add as configurações e inicializamos o board aos jogos atuais
-    4º - se o segundo player se juntar, removemos da fila, atualizamos jogos atuais, começamos timer e mandamos UPDATE
-    */
-
 function generateGameId() {
-    return "idk";
+    let gameId;
+    do {
+        gameId = Date.now().toString();
+        gameId = crypto.createHash('md5').update(gameId).digest('hex');
+    } while (gameId in queue || gameId in games);
+    return gameId;
 }
 
 function searchGame(size, initial) {
@@ -90,7 +73,7 @@ module.exports.join = function(request, response, message) {
         body = '{"error":"initial is undefined"}';
     } else {
         if (!authentication.validateUser(message["nick"], message["password"])) {
-            status = 400;
+            status = 401;
             body = '{"error":"invalid password"}';
         } else if (parseInt(message["size"]) <= 0) {
             status = 400;
@@ -109,6 +92,100 @@ module.exports.join = function(request, response, message) {
                 delete queue[gameId];
             }
             // TODO: call update?
+            status = 200;
+            body = JSON.stringify({"game": gameId});
+        }
+    }
+    response.writeHead(status);
+    response.write(body);
+}
+    
+module.exports.leave = function(request, response, message) {
+    let status, body;
+    if (!('nick' in message)) {
+        status = 400;
+        body = '{"error":"nick is undefined"}';
+    } else if (!('password' in message)) {
+        status = 400;
+        body = '{"error":"password is undefined"}';
+    } else if (!('game' in message)) {
+        status = 400;
+        body = '{"error":"game is undefined"}';
+    } else {
+        if (!authentication.validateUser(message["nick"], message["password"])) {
+            status = 401;
+            body = '{"error":"invalid password"}';
+        } else if (message["game"] in queue) {
+            if (message["nick"] != queue[message["game"]][2]) {
+                status = 400;
+                body = '{"error":"game must be cancelled by the original player"}';
+            } else {
+                delete queue[message["game"]];
+                status = 200;
+                body = '{}';
+            }
+        } else if (message["game"] in games) {
+            let players = getPlayers(games[message["game"]]);
+            if (message["nick"] != players[0] && message["nick"] != players[1]) {
+                status = 400;
+                body = '{"error":"game must be left by the original players"}';
+            } else {
+                // TODO: call update
+                // TODO: add leaderboard
+                delete games[message["game"]];
+                status = 200;
+                body = '{}';
+            }
+        } else {
+            status = 400;
+            body = '{"error":"invalid game"}';
+        }
+    }
+    response.writeHead(status);
+    response.write(body);
+}
+
+module.exports.notify = function(request, response, message) {
+    let status, body;
+    if (!('nick' in message)) {
+        status = 400;
+        body = '{"error":"nick is undefined"}';
+    } else if (!('password' in message)) {
+        status = 400;
+        body = '{"error":"password is undefined"}';
+    } else if (!('game' in message)) {
+        status = 400;
+        body = '{"error":"game is undefined"}';
+    } else if (!('move' in message)) {
+        status = 400;
+        body = '{"error":"move is undefined"}';
+    } else {
+        if (!authentication.validateUser(message["nick"], message["password"])) {
+            status = 401;
+            body = '{"error":"invalid password"}';
+        } else if (!(message["game"] in games)) {
+            status = 400;
+            body = '{"error":"invalid game"}';
+        } else {
+            let game = games[message["game"]];
+            let board = game["board"];
+            if (parseInt(message["move"]) < 0 || parseInt(message["move"]) >= board["sides"][board["turn"]]["pits"].length) {
+                status = 400;
+                body = '{"error":"invalid move"}';
+            } else if (board["turn"] != message["nick"]) {
+                status = 400;
+                body = '{"error":"Not your turn to play"}';
+            } else {
+                let isGameOver = gameLogic.playHole(game, parseInt(message["move"]));
+                if (isGameOver) {
+                    // TODO: SEND UPDATE WITH WINNER IN OBJ
+                    delete games[gameId];
+                } else {
+                    // TODO: SEND UPDATE
+                }
+                status = 200;
+                body = '{}';
+            }
         }
     }
     response.writeHead(status);

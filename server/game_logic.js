@@ -53,13 +53,20 @@ function cleanSides(sides, stores) {
     updateOutsideStores(sides, stores);
 }
 
+function getPlayers(game) {
+    let names = [];
+    for (let store of Object.entries(game["stores"])) names.push(store[0]);
+    return names;
+}
+
+module.exports.getPlayers = getPlayers;
+
 function gameOver(game) {
     let board = game["board"];
     let stores = game["stores"];
     cleanSides(board["sides"], stores);
 
-    let names = [];
-    for (let store of Object.entries(stores)) names.push(store[0]);
+    let names = getPlayers(game)
 
     if (stores[names[0]] == stores[names[1]]) return null;
     else if (stores[names[0]] > stores[names[1]]) return names[0];
@@ -100,13 +107,11 @@ function playVerification(game, lastSide, lastHole) {
     }
 
     if (isGameOver(board["sides"])) {
-        gameOver(game);
-        // TODO: ADD WINNER NA OBJ
-        return true;
+        return {"winner":gameOver(game)};
     }
 
     if (canChangePlayer) changePlayer(board);
-    return true;
+    return null;
 }
 
 function generatePit(numHoles, numSeeds) {
@@ -118,30 +123,32 @@ function generatePit(numHoles, numSeeds) {
     return pit;
 }
 
+function generateSides(players, numHoles, numSeeds) {
+    let result = {};
+    result[players[0]] = {};
+    result[players[0]]["store"] = 0;
+    result[players[0]]["pits"] = generatePit(numHoles, numSeeds);
+    result[players[1]] = {};
+    result[players[1]]["store"] = 0;
+    result[players[1]]["pits"] = generatePit(numHoles, numSeeds);
+    return result;
+}
+
+function generateStores(players) {
+    result = {};
+    result[players[0]] = 0;
+    result[players[1]] = 0;
+    return result;
+}
+
 module.exports.initGame = function(numHoles, numSeeds, players, starterPlayer) {
     return {
         "board":
         {
             "turn":starterPlayer,
-            "sides":
-            {
-                players[0]:
-                {
-                    "store":0,
-                    "pits":generatePit(numHoles,numSeeds)
-                },
-                players[1]:
-                {
-                    "store":0,
-                    "pits":generatePit(numHoles,numSeeds)
-                }
-            }
+            "sides": generateSides(players, numHoles, numSeeds)
         },
-        "stores":
-        {
-            players[0]:0,
-            players[1]:0
-        }
+        "stores": generateStores(players)
     };
 }
 
@@ -172,7 +179,7 @@ module.exports.playHole = function(game, holeIdx) {
         }
         seeds--;
     }
-    return [lastSide, lastHole];
+    return playVerification(game, lastSide, lastHole);
 }
 
 

@@ -1,7 +1,12 @@
 const fs = require('fs');
+const crypto = require('crypto');
 const config = require('./config.js');
 
 let users = {};  // nick: password
+
+function encryptPassword(password) {
+    return crypto.createHash('md5').update(password).digest('hex');
+}
 
 function loadUsers() {
     fs.readFile(config.usersFilepath, function(err, data) {
@@ -16,7 +21,7 @@ function saveUsers() {
 }
 
 function validateUser(nick, password) {
-    return users[nick] == password;
+    return users[nick] == encryptPassword(password);
 }
 
 module.exports.validateUser = validateUser;
@@ -26,7 +31,7 @@ function hasUser(nick) {
 }
 
 function addUser(nick, password) {
-    users[nick] = password;
+    users[nick] = encryptPassword(password);
     saveUsers();
 }
 

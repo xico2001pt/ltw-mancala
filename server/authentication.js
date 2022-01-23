@@ -2,7 +2,7 @@ const fs = require('fs');
 const crypto = require('crypto');
 const config = require('./config.js');
 
-let users = {};  // nick: password
+let users = {};  // users[nick] => hashed_password
 
 function encryptPassword(password) {
     return crypto.createHash('md5').update(password).digest('hex');
@@ -51,7 +51,7 @@ module.exports.register = function(response, message) {
             }
             else {
                 status = 400;
-                body = '{"error":"User registered with a different password"}';
+                body = '{"error":"user registered with a different password"}';
             }
         } else {
             addUser(message["nick"], message["password"]);

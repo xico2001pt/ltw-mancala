@@ -1,29 +1,3 @@
-/*
-{
-    "board":
-    {
-        "turn":"x234567",
-        "sides":
-        {
-            "x234567":
-            {
-                "store":0,
-                "pits":[4,4,4,4,4]
-            },
-            "x23456":
-            {
-                "store":0,
-                "pits":[4,4,4,4,4]
-            }
-        }
-    }
-    ,"stores":
-    {
-        "x234567":0,
-        "x23456":0
-    }
-}
-*/
 function isEmptySide(pits) {
     let count = 0;
     for (let seeds of Object.values(pits)) count += seeds;
@@ -92,7 +66,6 @@ function playVerification(game, lastSide, lastHole) {
     let currentPlayer = board["turn"];
     let holesPerSide = board["sides"][currentPlayer]["pits"].length;
     let canChangePlayer = true;
-    console.log(lastSide, lastHole, currentPlayer, holesPerSide);
     if (lastSide === currentPlayer) {  // If last hole is on player's side
         if (lastHole == holesPerSide) canChangePlayer = false;  // If last hole is storage
         else if (board["sides"][currentPlayer]["pits"][lastHole] == 1) {  // If last hole is empty (== 1, verification is done after the move)

@@ -7,39 +7,6 @@ let queue = {};  // queue[gameId] => [size, initial, player]
 let games = {};
 let responses = {}  // responses[gameId]] => [response1, response2]
 
-/*
-    /*
-        {
-        "board":
-        {
-            "turn":"x234567",
-            "sides":
-            {
-                "x234567":
-                {
-                    "store":0,
-                    "pits":[4,4,4,4,4]
-                },
-                "x23456":
-                {
-                    "store":0,
-                    "pits":[4,4,4,4,4]
-                }
-            }
-        }
-        ,"stores":
-        {
-            "x234567":0,
-            "x23456":0
-        }
-        }
-
-    update:
-    1º - initUpdate(gameId) : Inicializa EventSource para o jogo
-    2º - playUpdate(gameId) : manda o board, stores, .... Se o board fôr final, tmb manda winner
-    3º - leaveUpdate(gameId, winner) : manda winner por desistência
-*/
-
 function generateGameId() {
     let gameId;
     do {
@@ -59,7 +26,7 @@ function searchGame(size, initial) {
 function updateResponses(gameId, message) {
     if (gameId in responses) {
         for (let response of responses[gameId]) {
-            console.log(response.write('data: ' + JSON.stringify(message) + '\n\n'));
+            response.write('data: ' + JSON.stringify(message) + '\n\n');
         }
     }
 }
@@ -70,7 +37,6 @@ function endResponses(gameId) {
             response.end();
         }
         delete responses[gameId];
-        console.log(responses);
     }
 }
 
@@ -228,7 +194,6 @@ module.exports.addResponse = function(gameId, response) {
         responses[gameId] = [];
     }
     responses[gameId].push(response);
-    console.log(responses[gameId].length);
     if (responses[gameId].length == 2) {
         updateResponses(gameId, games[gameId]);
     }

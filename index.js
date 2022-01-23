@@ -2,8 +2,6 @@
 
 const http = require('http');
 const url = require('url');
-const stream = require('stream');
-const fs = require('fs');
 
 const config = require('./server/config.js');
 const authentication = require('./server/authentication.js');
@@ -69,7 +67,6 @@ function postHandler(request, response) {
     request.on('end', function () {
         let message;
         try {
-            console.log("body:", body);
             message = JSON.parse(body);
         } catch {
             response.writeHead(400);

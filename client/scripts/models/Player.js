@@ -1,6 +1,6 @@
 export default class Player {
     #name;
-    #difficulty;  // If not a bot, then -1
+    #difficulty;  // If not a bot then -1
     #score;
 
     constructor(name, difficulty) {

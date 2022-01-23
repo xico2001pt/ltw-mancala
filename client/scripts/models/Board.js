@@ -45,7 +45,6 @@ export default class Board {
     }
 
     static parseMultiplayer(board, nick) {
-        console.log(board);
         let numOfHoles = board["sides"][board["turn"]]["pits"].length;
         let seedsPerHole = Board.#countSeedsMultiplayer(board, numOfHoles) / (2 * numOfHoles);
 
@@ -62,13 +61,11 @@ export default class Board {
 
     static #countSeedsMultiplayer(board, holesPerSide) {
         let totalSeeds = 0;
-        let i = 0;
         for (let pair of Object.entries(board["sides"])) {
             for (let j = 0; j < holesPerSide; ++j) {
                 totalSeeds += pair[1]["pits"][j];
             }
             totalSeeds += pair[1]["store"];
-            ++i;
         }
         return totalSeeds;
     }

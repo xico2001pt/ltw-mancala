@@ -45,7 +45,6 @@ module.exports.ranking = function(response, message) {
         }
         return a.victories > b.victories ? -1 : 1;
     })
-    console.log(leaderboardCopy);
     body = JSON.stringify({"ranking":leaderboardCopy.slice(0,10)});
     response.writeHead(status);
     response.write(body);

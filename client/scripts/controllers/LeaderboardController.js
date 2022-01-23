@@ -33,7 +33,7 @@ export default class LeaderboardController {
     }
 
     #getRanking(player) {
-        for (var i = 0; i < this.#localRankings.length; ++i) {
+        for (let i = 0; i < this.#localRankings.length; ++i) {
             if (this.#localRankings[i].nick == player) {
                 return this.#localRankings[i];
             }

@@ -1,5 +1,6 @@
 const authentication = require('./authentication.js');
 const gameLogic = require('./game_logic.js');
+const leaderboard = require('./leaderboard.js');
 const crypto = require('crypto');
 
 let queue = {};  // queue[gameId] => [size, initial, player]
@@ -60,7 +61,6 @@ function updateResponses(gameId, message) {
         for (let response of responses[gameId]) {
             console.log(response.write('data: ' + JSON.stringify(message) + '\n\n'));
         }
-    //console.log(responses);
     }
 }
 
@@ -151,9 +151,11 @@ module.exports.leave = function(response, message) {
                 status = 400;
                 body = '{"error":"game must be left by the original players"}';
             } else {
-                updateResponses(message["game"], {"winner":gameLogic.opponentPlayer(message["nick"], games[message["game"]]["board"]["sides"])});
+                let winner = gameLogic.opponentPlayer(message["nick"], games[message["game"]]["board"]["sides"]);
+                updateResponses(message["game"], {"winner":winner});
                 endResponses(message["game"]);
-                // TODO: add leaderboard
+                leaderboard.addGame(winner, true);
+                leaderboard.addGame(message["nick"], false);
                 delete games[message["game"]];
                 status = 200;
                 body = '{}';
@@ -202,6 +204,9 @@ module.exports.notify = function(response, message) {
                 let winner = gameLogic.playHole(game, parseInt(message["move"]));
                 let finalResponse = JSON.parse(JSON.stringify(game));
                 if (winner) {
+                    let players = gameLogic.getPlayers(game);
+                    leaderboard.addGame(players[0], players[0] === winner["winner"]);
+                    leaderboard.addGame(players[1], players[1] === winner["winner"]);
                     finalResponse["winner"] = winner["winner"];
                     updateResponses(gameId, finalResponse);
                     endResponses(gameId);

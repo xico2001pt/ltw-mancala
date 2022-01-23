@@ -12,7 +12,6 @@
     display: block;
 }
 
-/* TODO: NOT WORKING */
 input {
     filter: none !important;  /* Prevent auto fill from changing color */
 }

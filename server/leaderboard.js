@@ -16,8 +16,8 @@ function saveLeaderboard() {
 }
 
 function getScore(nick) {
-    for (var i = 0; i < leaderboard.lenght; ++i) {
-        if (leaderboard[i].nick == nick) {
+    for (let i = 0; i < leaderboard.length; ++i) {
+        if (leaderboard[i]["nick"] == nick) {
             return leaderboard[i];
         }
     }
@@ -38,7 +38,15 @@ module.exports.addGame = function(nick, victory) {
 module.exports.ranking = function(response, message) {
     let status, body;
     status = 200;
-    body = JSON.stringify({"ranking":leaderboard.slice(0,10)});
+    let leaderboardCopy = JSON.parse(JSON.stringify(leaderboard));
+    leaderboardCopy = leaderboardCopy.sort((a, b) => {
+        if (a.victories == b.victories) {
+            return a.games > b.games ? 1 : -1;
+        }
+        return a.victories > b.victories ? -1 : 1;
+    })
+    console.log(leaderboardCopy);
+    body = JSON.stringify({"ranking":leaderboardCopy.slice(0,10)});
     response.writeHead(status);
     response.write(body);
 }

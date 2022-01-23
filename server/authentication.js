@@ -51,7 +51,7 @@ module.exports.register = function(response, message) {
             }
             else {
                 status = 400;
-                body = '{"error":"user registered with a different password"}';
+                body = '{"error":"User registered with a different password"}';
             }
         } else {
             addUser(message["nick"], message["password"]);

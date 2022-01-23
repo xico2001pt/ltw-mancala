@@ -1,5 +1,5 @@
 export default class ServerController {
-    static #servers = ["http://twserver.alunos.dcc.fc.up.pt:8008/", "http://127.0.0.1:9087/"];
+    static #servers = ["http://twserver.alunos.dcc.fc.up.pt:8008/","http://twserver.alunos.dcc.fc.up.pt:9087/"];
     static #url = ServerController.#servers[0];
     static #group = 87;
     static #eventSource;

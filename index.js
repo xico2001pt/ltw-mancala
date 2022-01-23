@@ -11,13 +11,20 @@ const leaderboard = require('./server/leaderboard.js');
 const mancala = require('./server/mancala.js');
 
 const headers = {
-    'Content-Type': 'application/javascript',
-    'Cache-Control': 'no-cache',
-    'Access-Control-Allow-Origin': '*',
-    'Connection': 'keep-alive'
-}
+    plain: {
+        'Content-Type': 'application/javascript',
+        'Cache-Control': 'no-cache',
+        'Access-Control-Allow-Origin': '*'        
+    },
+    sse: {    
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        'Access-Control-Allow-Origin': '*',
+        'Connection': 'keep-alive'
+    }
+};
 
-function writeHeaders(response) {
+function writeHeaders(response, headers) {
     for (let head of Object.entries(headers)) {
         response.setHeader(head[0], head[1]);
     }
@@ -29,19 +36,19 @@ function serverHandlerPost(request, response, message) {
 
     switch(pathname) {
     case '/register':
-        authentication.register(request, response, message);
+        authentication.register(response, message);
         break;
     case '/ranking':
-        leaderboard.ranking(request, response, message);
+        leaderboard.ranking(response, message);
         break;
     case '/join':
-        mancala.join(request, response, message);
+        mancala.join(response, message);
         break;
     case '/leave':
-        mancala.leave(request, response, message);
+        mancala.leave(response, message);
         break;
     case '/notify':
-        mancala.notify(request, response, message);
+        mancala.notify(response, message);
         break;
     default:
         response.writeHead(404);
@@ -78,14 +85,34 @@ function postHandler(request, response) {
     });
 }
 
-function main(request, response) {
-    writeHeaders(response);
-    if (request.method == 'GET') {
+function getHandler(request, response) {
+    const parsedUrl = url.parse(request.url, true);
+    const pathname = parsedUrl.pathname;
+    const query = parsedUrl.query;
 
+    switch(pathname) {
+    case '/update':
+        mancala.addResponse(query["game"], response);
+        break;
+    default:
+        response.writeHead(404);
+        response.write('{"error":"unknown GET request"}');
+        response.end();
+    }
+}
+
+function main(request, response) {
+    if (request.method == 'GET') {
+        writeHeaders(response, headers.sse);
+        getHandler(request, response);
     } else if (request.method == 'POST') {
+        writeHeaders(response, headers.plain);
         postHandler(request, response);
     } else {
-        // TODO: 404 '{"error":"unknown request.method request"}'
+        response.writeHead(404);
+        response.write(`{"error":"unknown ${request.method} request"}`);
+        response.end();
+        return;
     }
 }
 

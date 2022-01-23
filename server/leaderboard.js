@@ -35,7 +35,7 @@ module.exports.addGame = function(nick, victory) {
     saveLeaderboard();
 }
 
-module.exports.ranking = function(request, response, message) {
+module.exports.ranking = function(response, message) {
     let status, body;
     status = 200;
     body = JSON.stringify({"ranking":leaderboard.slice(0,10)});

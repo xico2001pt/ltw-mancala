@@ -4,6 +4,7 @@ const crypto = require('crypto');
 
 let queue = {};  // queue[gameId] => [size, initial, player]
 let games = {};
+let responses = {}  // responses[gameId]] => [response1, response2]
 
 /*
     /*
@@ -54,7 +55,26 @@ function searchGame(size, initial) {
     return null;
 }
 
-module.exports.join = function(request, response, message) {
+function updateResponses(gameId, message) {
+    if (gameId in responses) {
+        for (let response of responses[gameId]) {
+            console.log(response.write('data: ' + JSON.stringify(message) + '\n\n'));
+        }
+    //console.log(responses);
+    }
+}
+
+function endResponses(gameId) {
+    if (gameId in responses) {
+        for (let response of responses[gameId]) {
+            response.end();
+        }
+        delete responses[gameId];
+        console.log(responses);
+    }
+}
+
+module.exports.join = function(response, message) {
     let status, body;
     if (!('nick' in message)) {
         status = 400;
@@ -91,7 +111,6 @@ module.exports.join = function(request, response, message) {
                 games[gameId] = game;
                 delete queue[gameId];
             }
-            // TODO: call update?
             status = 200;
             body = JSON.stringify({"game": gameId});
         }
@@ -100,7 +119,7 @@ module.exports.join = function(request, response, message) {
     response.write(body);
 }
     
-module.exports.leave = function(request, response, message) {
+module.exports.leave = function(response, message) {
     let status, body;
     if (!('nick' in message)) {
         status = 400;
@@ -120,17 +139,20 @@ module.exports.leave = function(request, response, message) {
                 status = 400;
                 body = '{"error":"game must be cancelled by the original player"}';
             } else {
+                updateResponses(message["game"], {"winner":null});
+                endResponses(message["game"]);
                 delete queue[message["game"]];
                 status = 200;
                 body = '{}';
             }
         } else if (message["game"] in games) {
-            let players = getPlayers(games[message["game"]]);
+            let players = gameLogic.getPlayers(games[message["game"]]);
             if (message["nick"] != players[0] && message["nick"] != players[1]) {
                 status = 400;
                 body = '{"error":"game must be left by the original players"}';
             } else {
-                // TODO: call update
+                updateResponses(message["game"], {"winner":gameLogic.opponentPlayer(message["nick"], games[message["game"]]["board"]["sides"])});
+                endResponses(message["game"]);
                 // TODO: add leaderboard
                 delete games[message["game"]];
                 status = 200;
@@ -145,7 +167,7 @@ module.exports.leave = function(request, response, message) {
     response.write(body);
 }
 
-module.exports.notify = function(request, response, message) {
+module.exports.notify = function(response, message) {
     let status, body;
     if (!('nick' in message)) {
         status = 400;
@@ -176,12 +198,16 @@ module.exports.notify = function(request, response, message) {
                 status = 400;
                 body = '{"error":"Not your turn to play"}';
             } else {
-                let isGameOver = gameLogic.playHole(game, parseInt(message["move"]));
-                if (isGameOver) {
-                    // TODO: SEND UPDATE WITH WINNER IN OBJ
+                let gameId = message["game"];
+                let winner = gameLogic.playHole(game, parseInt(message["move"]));
+                let finalResponse = JSON.parse(JSON.stringify(game));
+                if (winner) {
+                    finalResponse["winner"] = winner["winner"];
+                    updateResponses(gameId, finalResponse);
+                    endResponses(gameId);
                     delete games[gameId];
                 } else {
-                    // TODO: SEND UPDATE
+                    updateResponses(gameId, finalResponse);
                 }
                 status = 200;
                 body = '{}';
@@ -190,4 +216,15 @@ module.exports.notify = function(request, response, message) {
     }
     response.writeHead(status);
     response.write(body);
+}
+
+module.exports.addResponse = function(gameId, response) {
+    if (!(gameId in responses)) {
+        responses[gameId] = [];
+    }
+    responses[gameId].push(response);
+    console.log(responses[gameId].length);
+    if (responses[gameId].length == 2) {
+        updateResponses(gameId, games[gameId]);
+    }
 }

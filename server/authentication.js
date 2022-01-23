@@ -35,7 +35,7 @@ function addUser(nick, password) {
     saveUsers();
 }
 
-module.exports.register = function(request, response, message) {
+module.exports.register = function(response, message) {
     let status, body;
     if (!('nick' in message)) {
         status = 400;

@@ -50,6 +50,7 @@ export default class GameController {
         let endgameSide = this.#isGameOver(this.#board);
         if (endgameSide != null) {
             this.#gameOver(endgameSide);
+            this.#viewer.updateGame(this.#board, this.#players);
             return;
         }
 
@@ -239,8 +240,6 @@ export default class GameController {
     }
 
     #gameOver(endgameSide) {
-        this.#gameFinished = true;
-
         // Recall remaining seeds to the storage
         let notEndgameSideIdx = GameController.#getNextSide(endgameSide);
         let notEndgameSide = this.#board.getSide(notEndgameSideIdx);
@@ -261,6 +260,7 @@ export default class GameController {
     }
 
     #endGame(winner) {
+        this.#gameFinished = true;
         this.#stopwatch.play(false);
         if (this.#timoutID) {
             clearTimeout(this.#timoutID);

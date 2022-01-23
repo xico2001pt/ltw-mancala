@@ -26,12 +26,12 @@
 */
 function isEmptySide(pits) {
     let count = 0;
-    for (let seeds of pits) count += seeds;
+    for (let seeds of Object.values(pits)) count += seeds;
     return count === 0;
 }
 
 function isGameOver(sides) {
-    for (let side of sides) {
+    for (let side of Object.values(sides)) {
         if (isEmptySide(side["pits"]))
             return true
     }
@@ -44,10 +44,10 @@ function updateOutsideStores(sides, stores) {
 }
 
 function cleanSides(sides, stores) {
-    for (let side of sides) {
+    for (let side of Object.values(sides)) {
         for (let i = 0; i < side["pits"].length; ++i) {
             side["store"] += side["pits"][i];
-            sides["pits"][i] = 0;
+            side["pits"][i] = 0;
         }
     }
     updateOutsideStores(sides, stores);
@@ -81,6 +81,8 @@ function opponentPlayer(player, sides) {
     return null;
 }
 
+module.exports.opponentPlayer = opponentPlayer;
+
 function changePlayer(board) {
     board["turn"] = opponentPlayer(board["turn"], board["sides"]);
 }
@@ -90,6 +92,7 @@ function playVerification(game, lastSide, lastHole) {
     let currentPlayer = board["turn"];
     let holesPerSide = board["sides"][currentPlayer]["pits"].length;
     let canChangePlayer = true;
+    console.log(lastSide, lastHole, currentPlayer, holesPerSide);
     if (lastSide === currentPlayer) {  // If last hole is on player's side
         if (lastHole == holesPerSide) canChangePlayer = false;  // If last hole is storage
         else if (board["sides"][currentPlayer]["pits"][lastHole] == 1) {  // If last hole is empty (== 1, verification is done after the move)
@@ -165,7 +168,7 @@ module.exports.playHole = function(game, holeIdx) {
     side["pits"][holeIdx] = 0;
 
     while (seeds > 0) {
-        lastSide = side;
+        lastSide = sideOwner;
         lastHole = hole;
         if (hole >= holesPerSide) {
             board["sides"][sideOwner]["store"]++;

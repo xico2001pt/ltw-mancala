@@ -1,4 +1,11 @@
-# ltw-mancala
+# The Rise of LTW (Mancala Edition)
+
+## Membros
+
+1. Francisco Cerqueira (up201905337@up.pt)
+2. Vasco Alves (up201808031@up.pt)
+
+## Descrição
 
 O objectivo deste trabalho é o desenvolvimento de uma aplicação web em todas as suas vertentes.
 
